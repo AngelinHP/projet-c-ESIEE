@@ -1,0 +1,8 @@
+﻿  Eleve.cpp
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(42,26): warning C4244: '=' : conversion de 'float' en 'int', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(43,27): warning C4244: '=' : conversion de 'float' en 'int', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(54,26): warning C4244: '=' : conversion de 'float' en 'int', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(55,27): warning C4244: '=' : conversion de 'float' en 'int', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(180,34): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(180,22): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+  G2D.vcxproj -> C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Debug\G2D.exe
