@@ -162,6 +162,7 @@
     <ClInclude Include="G2Dfull.h" />
     <ClInclude Include="glut.h" />
     <ClInclude Include="lodepng.h" />
+    <ClInclude Include="MapManager.h" />
     <ClInclude Include="V2.h" />
   </ItemGroup>
   <ItemGroup>

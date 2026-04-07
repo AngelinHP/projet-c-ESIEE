@@ -74,14 +74,14 @@ struct Player
 
 	void InitTexture()
 	{
-		texture = G2D::ExtractTextureFromPNG("(centré).png", Transparency::None);
+		texture = G2D::ExtractTextureFromPNG("player.png", Transparency::None);
 	}
 
 
 	void draw(V2 drawPos)
 	{
-		G2D::drawRectangle(drawPos, V2(32, 32), Color::Red, true);
-		G2D::drawRectWithTexture(texture, drawPos, V2(128, 128));
+		//G2D::drawRectangle(drawPos, V2(32, 32), Color::Red, true);
+		G2D::drawRectWithTexture(texture, drawPos, V2(64, 112));
 
 	}
 
