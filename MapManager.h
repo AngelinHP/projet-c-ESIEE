@@ -26,7 +26,7 @@ struct MapManager
 
 	int getTexture(char tile)
 	{
-		return 0;
+		return 1;
 	}
 
 	void drawMap()
