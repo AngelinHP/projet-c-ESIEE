@@ -81,7 +81,8 @@ struct Player
 	void draw(V2 drawPos)
 	{
 		//G2D::drawRectangle(drawPos, V2(32, 32), Color::Red, true);
-		G2D::drawRectWithTexture(texture, drawPos, V2(64, 112));
+		//G2D::drawRectWithTexture(texture, drawPos, V2(64, 112));
+		G2D::drawSpriteFrame(texture, V2(300, 300), V2(32, 32), V2(0, 96), V2(16, 16), V2(64, 112));
 
 	}
 

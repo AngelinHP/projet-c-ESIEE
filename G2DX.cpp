@@ -83,6 +83,49 @@ void G2D::drawRectWithTexture(int texture, V2 pos, V2 size, float angleDeg)
 	glDisable(GL_TEXTURE_2D);
 }
 
+//c'est encore moi ( la fonction sert a zoomer sur un sprite sheet pour n'afficher qu'une partie de l'image )
+void G2D::drawSpriteFrame(int texture, V2 pos, V2 size, V2 srcPos, V2 srcSize, V2 texSize, float angleDeg)
+{
+	glLineWidth(0);
+
+	float w = size.x;
+	float h = size.y;
+	const double MPI = 3.14159265358979323846;
+	glColor4ub(0, 0, 0, 128);
+
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glEnable(GL_TEXTURE_2D);
+
+	float angleRad = angleDeg / 180 * MPI;
+
+	float rX = cos(angleRad) * w - sin(angleRad) * h;
+	float rY = sin(angleRad) * w + cos(angleRad) * h;
+
+	float cx = pos.x + w / 2 - rX / 2;
+	float cY = pos.y + h / 2 - rY / 2;
+
+	glPushMatrix();
+	glTranslatef(cx, cY, 0.0);
+	glRotatef(angleDeg, 0.0, 0.0, 1.0);
+	
+	// On convertit les pixels en pourcentages (de 0.0 à 1.0) pour OpenGL
+	float u0 = srcPos.x / texSize.x;
+	float v0 = srcPos.y / texSize.y;
+	float u1 = (srcPos.x + srcSize.x) / texSize.x;
+	float v1 = (srcPos.y + srcSize.y) / texSize.y;
+
+	glBegin(GL_QUADS);
+	glTexCoord2f(u0, v0); glVertex3f(0, 0, 0.0f);
+	glTexCoord2f(u0, v1); glVertex3f(0, h, 0.0f);
+	glTexCoord2f(u1, v1); glVertex3f(w, h, 0.0f);
+	glTexCoord2f(u1, v0); glVertex3f(w, 0, 0.0f);
+	glEnd();
+	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
+}
+
 
 
 /////////////////////////////////////////////////////////////

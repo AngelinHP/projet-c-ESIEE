@@ -67,6 +67,7 @@ namespace G2D
 	int  ExtractTextureFromPNG(const std::string& filepath, Transparency T);  // 1 pixel gives key-color transparency
 	int  ExtractTextureFromPNG(const std::string& filepath, int R = 0, int G = 0, int B = 0);
 	void drawRectWithTexture(int IDtexture, V2 pos, V2 size, float angleDeg = 0);
+	void drawSpriteFrame(int texture, V2 pos, V2 size, V2 srcPos, V2 srcSize, V2 texSize, float angleDeg = 0.0f);// c'est moi
 	
 	// Draw Geometry
 	void setPixel(V2 P, Color c);
