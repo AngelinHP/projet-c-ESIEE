@@ -1,8 +1,26 @@
 ﻿  Eleve.cpp
-C:\Users\Admin\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(42,26): warning C4244: '=' : conversion de 'float' en 'int', perte possible de données
-C:\Users\Admin\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(43,27): warning C4244: '=' : conversion de 'float' en 'int', perte possible de données
-C:\Users\Admin\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(54,26): warning C4244: '=' : conversion de 'float' en 'int', perte possible de données
-C:\Users\Admin\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(55,27): warning C4244: '=' : conversion de 'float' en 'int', perte possible de données
-C:\Users\Admin\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(181,34): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
-C:\Users\Admin\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(181,22): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Admin\Documents\GitHub\projet-c-ESIEE\AnimationHandler.h(70,43): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+  (compiler le fichier source 'Eleve.cpp')
+  
+C:\Users\Admin\Documents\GitHub\projet-c-ESIEE\AnimationHandler.h(70,27): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+  (compiler le fichier source 'Eleve.cpp')
+  
+C:\Users\Admin\Documents\GitHub\projet-c-ESIEE\AnimationHandler.h(71,22): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+  (compiler le fichier source 'Eleve.cpp')
+  
+C:\Users\Admin\Documents\GitHub\projet-c-ESIEE\AnimationHandler.h(71,16): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+  (compiler le fichier source 'Eleve.cpp')
+  
+C:\Users\Admin\Documents\GitHub\projet-c-ESIEE\AnimationHandler.h(72,28): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+  (compiler le fichier source 'Eleve.cpp')
+  
+C:\Users\Admin\Documents\GitHub\projet-c-ESIEE\AnimationHandler.h(72,16): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+  (compiler le fichier source 'Eleve.cpp')
+  
+C:\Users\Admin\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(29,26): warning C4244: '=' : conversion de 'float' en 'int', perte possible de données
+C:\Users\Admin\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(30,27): warning C4244: '=' : conversion de 'float' en 'int', perte possible de données
+C:\Users\Admin\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(41,26): warning C4244: '=' : conversion de 'float' en 'int', perte possible de données
+C:\Users\Admin\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(42,27): warning C4244: '=' : conversion de 'float' en 'int', perte possible de données
+C:\Users\Admin\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(183,34): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Admin\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(183,22): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
   G2D.vcxproj -> C:\Users\Admin\Documents\GitHub\projet-c-ESIEE\Debug\G2D.exe

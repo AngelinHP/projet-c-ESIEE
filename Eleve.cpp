@@ -1,27 +1,14 @@
 #pragma warning( disable : 4996 ) 
 
  
-#include <cstdlib>
-#include <vector>
-#include <iostream>
-#include <string>
-#include "G2D.h"
-using namespace std;
-
-// touche P   : mets en pause
-// touche ESC : ferme la fenêtre et quitte le jeu
-
-
-#pragma warning( disable : 4996 ) 
-
+#pragma warning( disable : 4996 )
 
 #include <cstdlib>
 #include <vector>
 #include <iostream>
 #include <string>
 #include "G2D.h"
-
-
+#include "AnimationHandler.h"
 using namespace std;
 
 struct Camera2D
@@ -60,63 +47,75 @@ struct Camera2D
 struct Player
 {
 	V2 pos;
-	int texture;
+	float speed = 8.0f;
+	AnimationHandler anim;
+
+	// Gestion des Ã©tats
+	Direction lastDir = Direction::Down;
+	double lastMoveTime = 0.0;
+	double idleDelay = 0.3;  // 300ms avant de revenir en idle
 
 	Player()
 	{
 		pos = V2(200, 200);
 	}
 
-	void changePos(V2& newPos)
-	{
-		pos = newPos;
-	}
-
 	void InitTexture()
 	{
-		texture = G2D::ExtractTextureFromPNG("player.png", Transparency::None);
-	}
-
-
-	void draw(V2 drawPos)
-	{
-		//G2D::drawRectangle(drawPos, V2(32, 32), Color::Red, true);
-		//G2D::drawRectWithTexture(texture, drawPos, V2(64, 112));
-		G2D::drawSpriteFrame(texture, V2(300, 300), V2(32, 32), V2(0, 96), V2(16, 16), V2(64, 112));
-
+		anim.LoadTextures(
+			"C:\\Users\\Admin\\Documents\\GitHub\\projet-c-ESIEE\\sprites\\Idle.png",
+			"C:\\Users\\Admin\\Documents\\GitHub\\projet-c-ESIEE\\sprites\\Walk.png"
+		);
 	}
 
 	void Movement()
 	{
-		if (G2D::isKeyPressed(Key::Z))
-			pos = pos + V2(0, 10);
-		if (G2D::isKeyPressed(Key::Q))
-			pos = pos + V2(-10, 0);
-		if (G2D::isKeyPressed(Key::D))
-			pos = pos + V2(10, 0);
-		if (G2D::isKeyPressed(Key::S))
-			pos = pos + V2(0, -10);
-	}
+		bool isMoving = false;
+		double currentTime = G2D::elapsedTimeFromStartSeconds();
 
+		if (G2D::isKeyPressed(Key::Z)) { pos = pos + V2(0, speed);  isMoving = true; lastDir = Direction::Up; }
+		if (G2D::isKeyPressed(Key::S)) { pos = pos + V2(0, -speed); isMoving = true; lastDir = Direction::Down; }
+		if (G2D::isKeyPressed(Key::Q)) { pos = pos + V2(-speed, 0); isMoving = true; lastDir = Direction::Left; }
+		if (G2D::isKeyPressed(Key::D)) { pos = pos + V2(speed, 0);  isMoving = true; lastDir = Direction::Right; }
+
+		// Mise Ã  jour de l'animateur
+		if (isMoving)
+		{
+			lastMoveTime = currentTime;
+			anim.isMoving = true;
+			anim.SetDirection(lastDir);
+		}
+		else if (currentTime - lastMoveTime > idleDelay)
+		{
+			// Le dÃ©lai est Ã©coulÃ©, le joueur repasse au repos
+			anim.isMoving = false;
+		}
+
+		// On fait avancer le temps de l'animation
+		anim.Update();
+	}
 
 	void update()
 	{
 		Movement();
 	}
 
-
+	void draw(V2 drawPos)
+	{
+		anim.Draw(drawPos);
+	}
 };
  
    
 
 ///////////////////////////////////////////////////////////////////////////////
 //
-//    Données du jeu - structure instanciée dans le main
+//    Donnï¿½es du jeu - structure instanciï¿½e dans le main
 
 struct GameData
 {
-	int HeighPix = 800;   // hauteur de la fenêtre d'application
-	int WidthPix = 600;   // largeur de la fenêtre d'application
+	int HeighPix = 800;   // hauteur de la fenï¿½tre d'application
+	int WidthPix = 600;   // largeur de la fenï¿½tre d'application
 
 	Player& player = Player();
 
@@ -131,7 +130,7 @@ struct GameData
 ///////////////////////////////////////////////////////////////////////////////
 //
 // 
-//     fonction de rendu - reçoit en paramètre les données du jeu par référence
+//     fonction de rendu - reï¿½oit en paramï¿½tre les donnï¿½es du jeu par rï¿½fï¿½rence
 
 
 
@@ -153,11 +152,11 @@ void Render(const GameData& G)
 ///////////////////////////////////////////////////////////////////////////////
 //
 //
-//      Gestion de la logique du jeu - reçoit en paramètre les données du jeu par référence
+//      Gestion de la logique du jeu - reï¿½oit en paramï¿½tre les donnï¿½es du jeu par rï¿½fï¿½rence
 
 
 
-void Logic(GameData & G) // appelé 20 fois par seconde
+void Logic(GameData & G) // appelï¿½ 20 fois par seconde
 {
 	G.camera.update(G.player.pos);
 
@@ -168,26 +167,26 @@ void Logic(GameData & G) // appelé 20 fois par seconde
 ///////////////////////////////////////////////////////////////////////////////
 //
 //
-//        Démarrage de l'application
+//        Dï¿½marrage de l'application
 
 
 
 int main(int argc, char* argv[])
 {
-	GameData G;   // instanciation de l'unique objet GameData qui sera passé aux fonctions render et logic
+	GameData G;   // instanciation de l'unique objet GameData qui sera passï¿½ aux fonctions render et logic
 	
 
-	// crée la fenêtre de l'application
+	// crï¿½e la fenï¿½tre de l'application
 	G2D::initWindow(V2(G.WidthPix, G.HeighPix), V2(20, 20), string("G2D DEMO"));
 
-	// nombre de fois où la fonction Logic est appelée par seconde
+	// nombre de fois oï¿½ la fonction Logic est appelï¿½e par seconde
 	int callToLogicPerSec = 50;  
 
-	// lance l'application en spécifiant les deux fonctions utilisées et l'instance de GameData
+	// lance l'application en spï¿½cifiant les deux fonctions utilisï¿½es et l'instance de GameData
 	G.player.InitTexture();
 	
 
-	G2D::Run(Logic, Render, G, callToLogicPerSec,true);
+	G2D::Run(Logic, Render, G, callToLogicPerSec, true);
 
 	// aucun code ici
 }

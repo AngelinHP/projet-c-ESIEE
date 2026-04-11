@@ -107,7 +107,7 @@ void ExtendRGBtoRGBA(vector<byte> & data)
 // Vertical-symetry
 void VsymetryRGBAImage(vector<byte> & data,int Width, int Height)
 {
-	for (int y = 0; y < Width / 2; y++)
+	for (int y = 0; y < Height / 2; y++) //modifié y < Width/2 --> y < Height / 2
 	{
 		int width = Width * 4;
 		int pY = y * width;
