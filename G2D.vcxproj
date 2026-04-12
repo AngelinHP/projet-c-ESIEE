@@ -159,6 +159,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationHandler.h" />
+    <ClInclude Include="Camera2D.h" />
     <ClInclude Include="G2D.h" />
     <ClInclude Include="G2Dfull.h" />
     <ClInclude Include="glut.h" />

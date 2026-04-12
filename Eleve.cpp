@@ -9,39 +9,12 @@
 #include <string>
 #include "G2D.h"
 #include "AnimationHandler.h"
+#include "MapManager.h"
+#include "Camera2D.h"
+
 using namespace std;
 
-struct Camera2D
-{
-	V2 pos;
-	int winWidth;
-	int winHeight;
 
-	int offsetX;
-	int offsetY;
-
-	Camera2D(V2 cPos, int width, int height)
-	{
-		pos = cPos;
-		winWidth = width;
-		winHeight = height;
-
-		offsetX = winWidth / 2 - pos.x;
-		offsetY = winHeight / 2 - pos.y;
-	}
-
-	V2 renderWcamera(V2 ePos)
-	{
-		return V2(ePos.x + offsetX, ePos.y + offsetY);
-	}
-
-	void update(V2 nPos)
-	{
-		pos = nPos;
-		offsetX = winWidth / 2 - pos.x;
-		offsetY = winHeight / 2 - pos.y;
-	}
-};
 
 
 struct Player
@@ -55,16 +28,16 @@ struct Player
 	double lastMoveTime = 0.0;
 	double idleDelay = 0.3;  // 300ms avant de revenir en idle
 
-	Player()
+	Player(V2& _pos)
 	{
-		pos = V2(200, 200);
+		pos = _pos;
 	}
 
 	void InitTexture()
 	{
 		anim.LoadTextures(
-			"C:\\Users\\Admin\\Documents\\GitHub\\projet-c-ESIEE\\sprites\\Idle.png",
-			"C:\\Users\\Admin\\Documents\\GitHub\\projet-c-ESIEE\\sprites\\Walk.png"
+			"sprites\\Idle.png",
+			"sprites\\Walk.png"
 		);
 	}
 
@@ -74,9 +47,9 @@ struct Player
 		double currentTime = G2D::elapsedTimeFromStartSeconds();
 
 		if (G2D::isKeyPressed(Key::Z)) { pos = pos + V2(0, speed);  isMoving = true; lastDir = Direction::Up; }
-		if (G2D::isKeyPressed(Key::S)) { pos = pos + V2(0, -speed); isMoving = true; lastDir = Direction::Down; }
-		if (G2D::isKeyPressed(Key::Q)) { pos = pos + V2(-speed, 0); isMoving = true; lastDir = Direction::Left; }
-		if (G2D::isKeyPressed(Key::D)) { pos = pos + V2(speed, 0);  isMoving = true; lastDir = Direction::Right; }
+		else if (G2D::isKeyPressed(Key::S)) { pos = pos + V2(0, -speed); isMoving = true; lastDir = Direction::Down; }
+		else if (G2D::isKeyPressed(Key::Q)) { pos = pos + V2(-speed, 0); isMoving = true; lastDir = Direction::Left; }
+		else if (G2D::isKeyPressed(Key::D)) { pos = pos + V2(speed, 0);  isMoving = true; lastDir = Direction::Right; }
 
 		// Mise à jour de l'animateur
 		if (isMoving)
@@ -117,11 +90,15 @@ struct GameData
 	int HeighPix = 800;   // hauteur de la fen�tre d'application
 	int WidthPix = 600;   // largeur de la fen�tre d'application
 
-	Player& player = Player();
-
-	Camera2D& camera = Camera2D(player.pos,WidthPix, HeighPix);
-
 	V2 rectPos = V2(0, 400);
+
+	MapManager& map = MapManager();
+
+	V2 spawn = map.recupSpawn();
+
+	Player& player = Player(spawn);
+
+	Camera2D& camera = Camera2D(player.pos, WidthPix, HeighPix);
 
 	GameData() {}
 };
@@ -138,7 +115,9 @@ void Render(const GameData& G)
 {
 	G2D::clearScreen(Color::Black);
 
-	G2D::drawRectangle(G.camera.renderWcamera(G.rectPos), V2(300, 100), Color::Blue, true);
+	G.map.drawMap(G.camera);
+
+	//G2D::drawRectangle(G.camera.renderWcamera(G.rectPos), V2(300, 100), Color::Blue, true);
 
 	G.player.draw(G.camera.renderWcamera(G.player.pos));
 
