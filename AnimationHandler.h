@@ -62,10 +62,11 @@ public:
 
         if (currentTex == 0) return;
 
+
         G2D::drawSpriteFrame(
             currentTex,
             camera.renderWcamera(drawPos),
-            V2(spriteSize * 2, spriteSize * 2),
+            V2(spriteSize * 2, spriteSize * 2)*camera.zoom,
             V2(srcX, srcY),
             V2(spriteSize, spriteSize),
             textureTotalSize

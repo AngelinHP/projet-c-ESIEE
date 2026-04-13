@@ -121,10 +121,8 @@ struct Player
 
 struct GameData
 {
-	int HeighPix = 800;   // hauteur de la fen�tre d'application
-	int WidthPix = 600;   // largeur de la fen�tre d'application
-
-	V2 rectPos = V2(0, 400);
+	int HeighPix = 1000;   // hauteur de la fen�tre d'application
+	int WidthPix = 1600;   // largeur de la fen�tre d'application
 
 	MapManager& map = MapManager();
 
@@ -195,6 +193,7 @@ int main(int argc, char* argv[])
 
 	// lance l'application en sp�cifiant les deux fonctions utilis�es et l'instance de GameData
 	G.player.InitTexture();
+	G.map.InitTilesTexture();
 	
 
 	G2D::Run(Logic, Render, G, callToLogicPerSec, true);

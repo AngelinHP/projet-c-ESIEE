@@ -1,35 +1,54 @@
 #pragma once
 
+#include <iostream>
+
 #include "G2D.h"
+
+using namespace std;
+
 
 struct Camera2D
 {
-	V2 pos;
-	int winWidth;
-	int winHeight;
+    V2 pos;
+    int winWidth;
+    int winHeight;
 
-	int offsetX;
-	int offsetY;
+    // Utiliser un float permet des zooms plus précis (ex: 1.5f, 0.5f pour dézoomer)
+    float zoom = 2.0f;
 
-	Camera2D(V2 cPos, int width, int height)
-	{
-		pos = cPos;
-		winWidth = width;
-		winHeight = height;
+    Camera2D(V2 cPos, int width, int height)
+    {
+        pos = cPos;
+        winWidth = width;
+        winHeight = height;
+    }
 
-		offsetX = winWidth / 2 - pos.x;
-		offsetY = winHeight / 2 - pos.y;
-	}
+    V2 renderWcamera(V2 ePos)
+    {
+        //Distance relative
+        float relX = ePos.x - pos.x;
+        float relY = ePos.y - pos.y;
 
-	V2 renderWcamera(V2 ePos)
-	{
-		return V2(ePos.x + offsetX, ePos.y + offsetY);
-	}
+        // Application du zoom
+        relX *= zoom;
+        relY *= zoom;
 
-	void update(V2 nPos)
-	{
-		pos = nPos;
-		offsetX = winWidth / 2 - pos.x;
-		offsetY = winHeight / 2 - pos.y;
-	}
+        // Centrage sur l'écran
+        float screenX = relX + (winWidth / 2.0f);
+        float screenY = relY + (winHeight / 2.0f);
+
+        return V2(screenX, screenY);
+    }
+
+    void update(V2 nPos)
+    {
+        pos = nPos;
+    }
+
+    void setZoom(float newZoom)
+    {
+        if (newZoom > 0.01f) {
+            zoom = newZoom;
+        }
+    }
 };

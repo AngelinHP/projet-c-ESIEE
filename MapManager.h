@@ -16,24 +16,42 @@ struct MapManager
 
 	int tilesetSize = 64;
 
-	string map1 = "MMMMMMMMMMMMMMM"
-                  "M M  S        M"
-                  "M M M MMM MMM M"
-                  "M   M       M M"
-                  "MMM M M MMM M M"
-                  "M   M M     M M"
-                  "M MMM MMM MMMMM"
-                  "M   M  M      M"
-                  "M M M  M M MM M"
-                  "M M M  M M M  M"
-                  "M M M MM M MMMM"
-                  "M M M    M    M"
-                  "M M M MMMMMMM M"
-                  "M M      M    M"
-				  "MMMMMMMMMMMMMMM";
+	string map1 =
+		"MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM"
+		"MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM"
+		"MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM"
+		"MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM"
+		"MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM        MMMMM"
+		"MMMMMM    MMMMMMMMMMMMMMMMMMMMMMMMM        MMMMM"
+		"MMMMM      MMMMMMMMMMMMMMMMMMMMMMMM        MMMMM"
+		"MMMMM  V   MMMMMMMMMMMMMMMMMMMMMMMM        MMMMM"
+		"MMMMM VSV  MMMMMMMMMMMMMMMMMMMMMMMM   R    MMMMM"
+		"MMMMM  K   MMMMMMMMMMMMMMMMMMMMMMMM        MMMMM"
+		"MMMMM      MMMMMMMMMMMMMMMMMMMMMMMM        MMMMM"
+		"MMMMM      MMMMMMMMMMMMMMMMMMMMMMMM        MMMMM"
+		"MMMMM      MMMMMMMMMMMMMMMMMMMMMMMM        MMMMM"
+		"MMMMMM    MMMMM         MMMMMMMMMMM        MMMMM"
+		"MMMMMMM MMMMMMM    N                       MMMMM"
+		"MMMMMMM MMMMMMM         MMMMMMMMMMMMMMMMMMMMMMMM"
+		"MMMMMMM MMMMMMM         MMMMMMMMMMMMMMMMMMMMMMMM"
+		"MMMMMMM MMMMMMM         MMMMMMMMMMMMMMMMMMMMMMMM"
+		"MMMMMMM MMMMMMM         MMMMMMMMMMMMMMMMMMMMMMMM"
+		"MMMMMMM                 MMMMMMMMMMMMMMMMMMMMMMMM"
+		"MMMMMMMMMMMMMMM         MMMMMMMMMMMMMMMMMMMMMMMM"
+		"MMMMMMMMMMMMMMM         MMMMMMMMMMMMMMMMMMMMMMMM"
+		"MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM"
+		"MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM"
+		"MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM"
+		"MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM"
+		"MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM"
+		"MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM"
+		"MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM"
+		"MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM"
+		"MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM";
 
-	int mapWidth = 15;
-	int mapHeight = 15;
+	
+	int mapHeight = 30;
+	int mapWidth = 48;
 
 	map<char, int> textures;
 
@@ -46,28 +64,33 @@ struct MapManager
 
 	void drawMap(Camera2D& camera)
 	{
+
+		cout << "Map size: " << map1.size() << endl;
 		for (int x = 0; x < mapWidth; x++) {
 			for (int y = 0; y < mapHeight; y++) {
 
-				if (map1[(15 - y - 1) * 15 + x] == 'M')
-					G2D::drawRectangle(camera.renderWcamera(V2(x * tilesetSize, y * tilesetSize)), V2(tilesetSize, tilesetSize), Color::Blue, true);
 
-				//int texture = getTexture(map1[(15 - y - 1) * 15 + x]);
+				V2 screenPos = camera.renderWcamera(V2(x * tilesetSize, y * tilesetSize));
+
+				V2 screenSize = V2(tilesetSize, tilesetSize)*camera.zoom;
+
+				G2D::drawRectWithTexture(textures[' '], screenPos, screenSize);
+
+				if (map1[(mapHeight - y - 1) * mapWidth + x] == 'M')
+					G2D::drawRectangle(screenPos, screenSize, Color::Blue, true);
 
 
-				//G2D::drawRectWithTexture(texture, V2(x * tilesetSize, y * tilesetSize), V2(tilesetSize, tilesetSize));
+				
 			}
 		}
 	}
 
-	bool Mur(int x, int y) { return map1[(15 - y - 1) * 15 + x] == 'M'; }
-
-	bool Eau(int x, int y) { return map1[(15 - y - 1) * 15 + x] == 'E';}
+	bool Mur(int x, int y) { return map1[(mapHeight - y - 1) * mapWidth + x] == 'M'; }
 
 	V2 recupSpawn() {
-		for (int x = 0; x < mapWidth; x++) {
-			for (int y = 0; y < mapHeight; y++) {
-				if (map1[(15 - y - 1) * 15 + x] == 'S')
+		for (int y = 0; y < mapHeight; y++) {
+			for (int x = 0; x < mapWidth; x++) {
+				if (map1[(mapHeight - y - 1) * mapWidth + x] == 'S')
 					return V2(x * tilesetSize, y * tilesetSize);
 			}
 		}
@@ -75,7 +98,7 @@ struct MapManager
 
 	void InitTilesTexture()
 	{
-
+		textures[' '] = G2D::ExtractTextureFromPNG("sprites/tileset/floor.png", Transparency::None);
 	}
 
 };
