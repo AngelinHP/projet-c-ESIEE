@@ -1,5 +1,6 @@
 #pragma once
 #include "G2D.h"
+#include "Camera2D.h"
 
 enum class Direction { Down, Up, Left, Right };
 
@@ -54,7 +55,7 @@ public:
         return currentFrame * spriteSize;
     }
 
-    void Draw(V2 drawPos) {
+    void Draw(Camera2D& camera, V2 drawPos) {
         int srcX = GetSrcX();
         int srcY = GetSrcY();
         int currentTex = GetCurrentTexture();
@@ -63,7 +64,7 @@ public:
 
         G2D::drawSpriteFrame(
             currentTex,
-            drawPos,
+            camera.renderWcamera(drawPos),
             V2(spriteSize * 2, spriteSize * 2),
             V2(srcX, srcY),
             V2(spriteSize, spriteSize),

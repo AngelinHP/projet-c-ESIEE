@@ -7,6 +7,7 @@
 #include <vector>
 #include <iostream>
 #include <string>
+#include <map>
 #include "G2D.h"
 #include "AnimationHandler.h"
 #include "MapManager.h"
@@ -20,17 +21,37 @@ using namespace std;
 struct Player
 {
 	V2 pos;
-	float speed = 8.0f;
 	AnimationHandler anim;
+	enum class Movement {Up, Down, Left, Right, None};
 
 	// Gestion des états
+	double lastMoveTime = -200.0;
+	double idleDelay = 0.0; // 300ms avant de revenir en idle
+	float moveTime = 0.5f;
+	float speed;
 	Direction lastDir = Direction::Down;
-	double lastMoveTime = 0.0;
-	double idleDelay = 0.3;  // 300ms avant de revenir en idle
+	Movement lastMove = Movement::None;
+	map<Movement, V2> speedVectors;
+
+
+	bool isMoving = false;
+	double currentTime = G2D::elapsedTimeFromStartSeconds();
+	double deltaTime = currentTime - lastMoveTime;
+	
+
+	V2 center = V2(pos.x + 32, pos.y + 32);
 
 	Player(V2& _pos)
 	{
 		pos = _pos;
+		speed = 1/moveTime;
+		speedVectors = {
+		{Movement::Up, V2(0, speed)},
+		{Movement::Down, V2(0, -speed)},
+		{Movement::Left, V2(-speed, 0)},
+		{Movement::Right, V2(speed,0)},
+		{Movement::None, V2(0,0)}
+		};
 	}
 
 	void InitTexture()
@@ -41,41 +62,51 @@ struct Player
 		);
 	}
 
-	void Movement()
+	void registerMovement()
 	{
-		bool isMoving = false;
-		double currentTime = G2D::elapsedTimeFromStartSeconds();
 
-		if (G2D::isKeyPressed(Key::Z)) { pos = pos + V2(0, speed);  isMoving = true; lastDir = Direction::Up; }
-		else if (G2D::isKeyPressed(Key::S)) { pos = pos + V2(0, -speed); isMoving = true; lastDir = Direction::Down; }
-		else if (G2D::isKeyPressed(Key::Q)) { pos = pos + V2(-speed, 0); isMoving = true; lastDir = Direction::Left; }
-		else if (G2D::isKeyPressed(Key::D)) { pos = pos + V2(speed, 0);  isMoving = true; lastDir = Direction::Right; }
+		if (deltaTime > moveTime) {
+			if (G2D::isKeyPressed(Key::Z)) { lastDir = Direction::Up; lastMove = Movement::Up; lastMoveTime = currentTime; }
+			else if (G2D::isKeyPressed(Key::S)) { lastDir = Direction::Down; lastMove = Movement::Down; lastMoveTime = currentTime; }
+			else if (G2D::isKeyPressed(Key::Q)) { lastDir = Direction::Left; lastMove = Movement::Left;lastMoveTime = currentTime; }
+			else if (G2D::isKeyPressed(Key::D)) { lastDir = Direction::Right; lastMove = Movement::Right;lastMoveTime = currentTime; }
+		}
 
+	}
+
+	void move() {
 		// Mise à jour de l'animateur
-		if (isMoving)
-		{
-			lastMoveTime = currentTime;
-			anim.isMoving = true;
+		isMoving = lastMove != Movement::None && deltaTime < moveTime;
+
+		if (isMoving) {
 			anim.SetDirection(lastDir);
+			pos = pos + speedVectors[lastMove];
 		}
-		else if (currentTime - lastMoveTime > idleDelay)
-		{
-			// Le délai est écoulé, le joueur repasse au repos
-			anim.isMoving = false;
-		}
+
+
+
+		anim.isMoving = isMoving;
 
 		// On fait avancer le temps de l'animation
 		anim.Update();
+
 	}
 
 	void update()
 	{
-		Movement();
+		currentTime = G2D::elapsedTimeFromStartSeconds();
+		deltaTime = currentTime - lastMoveTime;
+
+		registerMovement();
+		move();
+		center = V2(pos.x + 32, pos.y + 32);
+
+		cout << "Player pos: (" << pos.x << ", " << pos.y << ") " << endl;
 	}
 
-	void draw(V2 drawPos)
+	void draw(Camera2D& camera)
 	{
-		anim.Draw(drawPos);
+		anim.Draw(camera, pos);
 	}
 };
  
@@ -119,7 +150,7 @@ void Render(const GameData& G)
 
 	//G2D::drawRectangle(G.camera.renderWcamera(G.rectPos), V2(300, 100), Color::Blue, true);
 
-	G.player.draw(G.camera.renderWcamera(G.player.pos));
+	G.player.draw(G.camera);
 
 	G2D::Show();
 }
@@ -159,7 +190,7 @@ int main(int argc, char* argv[])
 	G2D::initWindow(V2(G.WidthPix, G.HeighPix), V2(20, 20), string("G2D DEMO"));
 
 	// nombre de fois o� la fonction Logic est appel�e par seconde
-	int callToLogicPerSec = 50;  
+	int callToLogicPerSec = 64;  
 
 	// lance l'application en sp�cifiant les deux fonctions utilis�es et l'instance de GameData
 	G.player.InitTexture();
