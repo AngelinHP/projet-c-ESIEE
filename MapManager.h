@@ -14,7 +14,7 @@ using namespace std;
 struct MapManager
 {
 
-	int tilesetSize = 64;
+	int tilesetSize = 32;
 
 	string map1 =
 		"MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM"
@@ -57,17 +57,46 @@ struct MapManager
 
 	
 
-	int getTexture(char tile)
+	void drawTextureWall(int x, int y, Camera2D& camera)
 	{
-		return 1;
+
+		int horizontal = 0, vertical = 0, diagH = 0, diagB = 0;
+
+		if (x >= mapWidth-1 || x == 0 || y >= mapHeight-1 || y == 0) {
+			vertical = 1;
+			horizontal = 1;
+		}
+		else {
+
+			diagH = Mur(x - 1, y + 1) + 2*Mur(x + 1, y + 1);
+			diagB = Mur(x - 1, y - 1) + 2*Mur(x + 1, y - 1);
+
+			vertical = 1 - Mur(x, y + 1) + Mur(x, y - 1);
+			horizontal = 1 + Mur(x - 1, y) - Mur(x + 1, y);
+			
+		}
+
+		if (vertical == 1 && horizontal == 1 && (diagH + diagB) != 0)
+		{
+			horizontal = 2 + diagH + diagB;
+			vertical = 1 + 
+		}
+
+		G2D::drawSpriteFrame(
+			textures['M'],
+			camera.renderWcamera(V2(x * tilesetSize, y * tilesetSize)),
+			V2(tilesetSize, tilesetSize) * camera.zoom,
+			V2(16*horizontal, 16*vertical),
+			V2(16, 16),
+			V2(48,48)
+		);
 	}
 
 	void drawMap(Camera2D& camera)
 	{
-
-		cout << "Map size: " << map1.size() << endl;
-		for (int x = 0; x < mapWidth; x++) {
-			for (int y = 0; y < mapHeight; y++) {
+		for (int y = 0; y < mapHeight; y++) {
+			for (int x = 0; x < mapWidth; x++) {
+			
 
 
 				V2 screenPos = camera.renderWcamera(V2(x * tilesetSize, y * tilesetSize));
@@ -77,7 +106,7 @@ struct MapManager
 				G2D::drawRectWithTexture(textures[' '], screenPos, screenSize);
 
 				if (map1[(mapHeight - y - 1) * mapWidth + x] == 'M')
-					G2D::drawRectangle(screenPos, screenSize, Color::Blue, true);
+					drawTextureWall(x, y, camera);
 
 
 				
@@ -99,6 +128,7 @@ struct MapManager
 	void InitTilesTexture()
 	{
 		textures[' '] = G2D::ExtractTextureFromPNG("sprites/tileset/floor.png", Transparency::None);
+		textures['M'] = G2D::ExtractTextureFromPNG("sprites/tileset/walls.png", Transparency::None);
 	}
 
 };

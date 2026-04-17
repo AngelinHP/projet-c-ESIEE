@@ -14,7 +14,7 @@ struct Camera2D
     int winHeight;
 
     // Utiliser un float permet des zooms plus précis (ex: 1.5f, 0.5f pour dézoomer)
-    float zoom = 2.0f;
+    float zoom = 4.0f;
 
     Camera2D(V2 cPos, int width, int height)
     {
