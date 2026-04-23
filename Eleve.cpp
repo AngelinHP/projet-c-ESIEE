@@ -8,10 +8,12 @@
 #include <iostream>
 #include <string>
 #include <map>
+
 #include "G2D.h"
 #include "AnimationHandler.h"
 #include "MapManager.h"
 #include "Camera2D.h"
+#include "Inventory.h"
 
 using namespace std;
 
@@ -34,6 +36,8 @@ struct Player
 
 	bool isMoving = false;
 	bool canMove = false;
+	bool isInInventory = false;
+
 	double currentTime = G2D::elapsedTimeFromStartSeconds();
 	V2 futurePos;
 
@@ -67,10 +71,12 @@ struct Player
 	{
 
 		if (pos == futurePos) {
-			if (G2D::isKeyPressed(Key::Z)) { lastDir = Direction::Up; lastMove = Movement::Up; futurePos = pos + dirVectors[Movement::Up]; }
-			else if (G2D::isKeyPressed(Key::S)) { lastDir = Direction::Down; lastMove = Movement::Down; futurePos = pos + dirVectors[Movement::Down]; }
-			else if (G2D::isKeyPressed(Key::Q)) { lastDir = Direction::Left; lastMove = Movement::Left; futurePos = pos + dirVectors[Movement::Left]; }
-			else if (G2D::isKeyPressed(Key::D)) { lastDir = Direction::Right; lastMove = Movement::Right; futurePos = pos + dirVectors[Movement::Right]; }
+			if(!isInInventory)
+				if (G2D::isKeyPressed(Key::Z)) { lastDir = Direction::Up; lastMove = Movement::Up; futurePos = pos + dirVectors[Movement::Up]; }
+				else if (G2D::isKeyPressed(Key::S)) { lastDir = Direction::Down; lastMove = Movement::Down; futurePos = pos + dirVectors[Movement::Down]; }
+				else if (G2D::isKeyPressed(Key::Q)) { lastDir = Direction::Left; lastMove = Movement::Left; futurePos = pos + dirVectors[Movement::Left]; }
+				else if (G2D::isKeyPressed(Key::D)) { lastDir = Direction::Right; lastMove = Movement::Right; futurePos = pos + dirVectors[Movement::Right]; }
+			if (G2D::keyHasBeenHit(Key::I)) { isInInventory = !isInInventory; }
 		}
 
 	}
@@ -130,6 +136,8 @@ struct GameData
 
 	Player& player = Player(spawn, map.tilesetSize, map);
 
+	Inventory& inventory = Inventory();
+
 	Camera2D& camera = Camera2D(player.pos, WidthPix, HeighPix);
 
 	GameData() {}
@@ -150,6 +158,9 @@ void Render(const GameData& G)
 	G.map.drawMap(G.camera);
 
 	G.player.draw(G.camera);
+
+	if (G.player.isInInventory)
+		G.inventory.drawInventory(G.camera, 200, 200);
 
 	G2D::Show();
 }
@@ -194,6 +205,8 @@ int main(int argc, char* argv[])
 	// lance l'application en sp�cifiant les deux fonctions utilis�es et l'instance de GameData
 	G.player.InitTexture();
 	G.map.InitTilesTexture();
+	G.inventory.addItem("Baton");
+	G.inventory.addItem("Couteau");
 	
 
 	G2D::Run(Logic, Render, G, callToLogicPerSec, true);

@@ -20,26 +20,26 @@ struct MapManager
 		"MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM"
 		"MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM"
 		"MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM"
-		"MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM"
-		"MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM        MMMMM"
-		"MMMMMM    MMMMMMMMMMMMMMMMMMMMMMMMM        MMMMM"
+		"MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMCMMMMMMMMCMMMM"
+		"MMMMMCMMMMCMMMMMMMMMMMMMMMMMMMMMMMM        MMMMM"
+		"MMMMCM    MCMMMMMMMMMMMMMMMMMMMMMMM        MMMMM"
 		"MMMMM      MMMMMMMMMMMMMMMMMMMMMMMM        MMMMM"
 		"MMMMM  V   MMMMMMMMMMMMMMMMMMMMMMMM        MMMMM"
 		"MMMMM VSV  MMMMMMMMMMMMMMMMMMMMMMMM   R    MMMMM"
 		"MMMMM  K   MMMMMMMMMMMMMMMMMMMMMMMM        MMMMM"
 		"MMMMM      MMMMMMMMMMMMMMMMMMMMMMMM        MMMMM"
 		"MMMMM      MMMMMMMMMMMMMMMMMMMMMMMM        MMMMM"
-		"MMMMM      MMMMMMMMMMMMMMMMMMMMMMMM        MMMMM"
-		"MMMMMM    MMMMM         MMMMMMMMMMM        MMMMM"
-		"MMMMMMM MMMMMMM    N                       MMMMM"
-		"MMMMMMM MMMMMMM         MMMMMMMMMMMMMMMMMMMMMMMM"
+		"MMMMM      MMMCMMMMMMMMMCMMMMMMMMMM        MMMMM"
+		"MMMMCM    MCMMM         MMMMMMMMMMM        MMMMM"
+		"MMMMMCM MMCMMMM    N                       MMMMM"
+		"MMMMMMM MMMMMMM         MMMMMMMMMMMMMMMMMMMCMMMM"
 		"MMMMMMM MMMMMMM         MMMMMMMMMMMMMMMMMMMMMMMM"
 		"MMMMMMM MMMMMMM         MMMMMMMMMMMMMMMMMMMMMMMM"
 		"MMMMMMM MMMMMMM         MMMMMMMMMMMMMMMMMMMMMMMM"
 		"MMMMMMM                 MMMMMMMMMMMMMMMMMMMMMMMM"
+		"MMMMMMCMMMMMMMM         MMMMMMMMMMMMMMMMMMMMMMMM"
 		"MMMMMMMMMMMMMMM         MMMMMMMMMMMMMMMMMMMMMMMM"
-		"MMMMMMMMMMMMMMM         MMMMMMMMMMMMMMMMMMMMMMMM"
-		"MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM"
+		"MMMMMMMMMMMMMMCMMMMMMMMMCMMMMMMMMMMMMMMMMMMMMMMM"
 		"MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM"
 		"MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM"
 		"MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM"
@@ -55,31 +55,34 @@ struct MapManager
 
 	map<char, int> textures;
 
-	
+	void drawTextureCorner(int x, int y, Camera2D& camera)
+	{
+
+		int horizontal = 2 - Mur(x+1,y+1) - Mur(x+1,y-1), vertical = 1 - Mur(x - 1, y - 1) - Mur(x + 1, y - 1);
+
+
+		G2D::drawSpriteFrame(
+			textures['C'],
+			camera.renderWcamera(V2(x * tilesetSize, y * tilesetSize)),
+			V2(tilesetSize, tilesetSize) * camera.zoom,
+			V2(16 * horizontal, 16 * vertical),
+			V2(16, 16),
+			V2(32,32)
+		);
+	}
 
 	void drawTextureWall(int x, int y, Camera2D& camera)
 	{
 
-		int horizontal = 0, vertical = 0, diagH = 0, diagB = 0;
+		int horizontal = 0, vertical = 0;
 
 		if (x >= mapWidth-1 || x == 0 || y >= mapHeight-1 || y == 0) {
 			vertical = 1;
 			horizontal = 1;
 		}
 		else {
-
-			diagH = Mur(x - 1, y + 1) + 2*Mur(x + 1, y + 1);
-			diagB = Mur(x - 1, y - 1) + 2*Mur(x + 1, y - 1);
-
 			vertical = 1 - Mur(x, y + 1) + Mur(x, y - 1);
-			horizontal = 1 + Mur(x - 1, y) - Mur(x + 1, y);
-			
-		}
-
-		if (vertical == 1 && horizontal == 1 && (diagH + diagB) != 0)
-		{
-			horizontal = 2 + diagH + diagB;
-			vertical = 1 + 
+			horizontal = 1 + Mur(x - 1, y) - Mur(x + 1, y);	
 		}
 
 		G2D::drawSpriteFrame(
@@ -107,6 +110,8 @@ struct MapManager
 
 				if (map1[(mapHeight - y - 1) * mapWidth + x] == 'M')
 					drawTextureWall(x, y, camera);
+				if (map1[(mapHeight - y - 1) * mapWidth + x] == 'C')
+					drawTextureCorner(x, y, camera);
 
 
 				
@@ -114,7 +119,7 @@ struct MapManager
 		}
 	}
 
-	bool Mur(int x, int y) { return map1[(mapHeight - y - 1) * mapWidth + x] == 'M'; }
+	bool Mur(int x, int y) { return map1[(mapHeight - y - 1) * mapWidth + x] == 'M' || map1[(mapHeight - y - 1) * mapWidth + x] == 'C'; }
 
 	V2 recupSpawn() {
 		for (int y = 0; y < mapHeight; y++) {
@@ -129,6 +134,7 @@ struct MapManager
 	{
 		textures[' '] = G2D::ExtractTextureFromPNG("sprites/tileset/floor.png", Transparency::None);
 		textures['M'] = G2D::ExtractTextureFromPNG("sprites/tileset/walls.png", Transparency::None);
+		textures['C'] = G2D::ExtractTextureFromPNG("sprites/tileset/corners.png", Transparency::None);
 	}
 
 };

@@ -17,50 +17,134 @@ C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\AnimationHandler.h(71,28)
 C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\AnimationHandler.h(71,16): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
   (compiler le fichier source 'Eleve.cpp')
   
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\MapManager.h(81,47): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\MapManager.h(66,47): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
   (compiler le fichier source 'Eleve.cpp')
   
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\MapManager.h(81,30): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\MapManager.h(66,30): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
   (compiler le fichier source 'Eleve.cpp')
   
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\MapManager.h(82,20): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\MapManager.h(67,20): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
   (compiler le fichier source 'Eleve.cpp')
   
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\MapManager.h(82,7): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\MapManager.h(67,7): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
   (compiler le fichier source 'Eleve.cpp')
   
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\MapManager.h(83,24): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\MapManager.h(68,27): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
   (compiler le fichier source 'Eleve.cpp')
   
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\MapManager.h(83,9): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\MapManager.h(68,10): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
   (compiler le fichier source 'Eleve.cpp')
   
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\MapManager.h(96,63): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\MapManager.h(90,47): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
   (compiler le fichier source 'Eleve.cpp')
   
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\MapManager.h(96,46): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\MapManager.h(90,30): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
   (compiler le fichier source 'Eleve.cpp')
   
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\MapManager.h(98,37): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\MapManager.h(91,20): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
   (compiler le fichier source 'Eleve.cpp')
   
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\MapManager.h(98,24): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\MapManager.h(91,7): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
   (compiler le fichier source 'Eleve.cpp')
   
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\MapManager.h(117,35): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\MapManager.h(92,24): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
   (compiler le fichier source 'Eleve.cpp')
   
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\MapManager.h(117,18): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\MapManager.h(92,9): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
   (compiler le fichier source 'Eleve.cpp')
   
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(48,24): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(49,26): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(50,23): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(51,24): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(81,71): warning C4244: 'argument' : conversion de 'float' en 'int', perte possible de données
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(81,37): warning C4244: 'argument' : conversion de 'float' en 'int', perte possible de données
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(87,55): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(189,34): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(189,22): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\MapManager.h(120,1): warning C4715: 'MapManager::recupSpawn' : les chemins de contrôle ne retournent pas tous une valeur
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\MapManager.h(105,63): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+  (compiler le fichier source 'Eleve.cpp')
+  
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\MapManager.h(105,46): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+  (compiler le fichier source 'Eleve.cpp')
+  
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\MapManager.h(107,37): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+  (compiler le fichier source 'Eleve.cpp')
+  
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\MapManager.h(107,24): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+  (compiler le fichier source 'Eleve.cpp')
+  
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\MapManager.h(128,35): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+  (compiler le fichier source 'Eleve.cpp')
+  
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\MapManager.h(128,18): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+  (compiler le fichier source 'Eleve.cpp')
+  
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Inventory.h(40,28): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+  (compiler le fichier source 'Eleve.cpp')
+  
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Inventory.h(40,25): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+  (compiler le fichier source 'Eleve.cpp')
+  
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Inventory.h(40,42): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+  (compiler le fichier source 'Eleve.cpp')
+  
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Inventory.h(40,35): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+  (compiler le fichier source 'Eleve.cpp')
+  
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Inventory.h(41,23): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+  (compiler le fichier source 'Eleve.cpp')
+  
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Inventory.h(41,20): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+  (compiler le fichier source 'Eleve.cpp')
+  
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Inventory.h(41,41): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+  (compiler le fichier source 'Eleve.cpp')
+  
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Inventory.h(41,32): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+  (compiler le fichier source 'Eleve.cpp')
+  
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Inventory.h(42,23): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+  (compiler le fichier source 'Eleve.cpp')
+  
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Inventory.h(42,20): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+  (compiler le fichier source 'Eleve.cpp')
+  
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Inventory.h(42,35): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+  (compiler le fichier source 'Eleve.cpp')
+  
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Inventory.h(42,30): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+  (compiler le fichier source 'Eleve.cpp')
+  
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Inventory.h(43,31): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+  (compiler le fichier source 'Eleve.cpp')
+  
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Inventory.h(43,22): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+  (compiler le fichier source 'Eleve.cpp')
+  
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Inventory.h(43,51): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+  (compiler le fichier source 'Eleve.cpp')
+  
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Inventory.h(43,40): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+  (compiler le fichier source 'Eleve.cpp')
+  
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Inventory.h(44,25): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+  (compiler le fichier source 'Eleve.cpp')
+  
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Inventory.h(44,20): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+  (compiler le fichier source 'Eleve.cpp')
+  
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Inventory.h(44,52): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+  (compiler le fichier source 'Eleve.cpp')
+  
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Inventory.h(44,41): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+  (compiler le fichier source 'Eleve.cpp')
+  
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Inventory.h(49,73): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+  (compiler le fichier source 'Eleve.cpp')
+  
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Inventory.h(49,33): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+  (compiler le fichier source 'Eleve.cpp')
+  
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(52,24): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(53,26): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(54,23): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(55,24): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(87,71): warning C4244: 'argument' : conversion de 'float' en 'int', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(87,37): warning C4244: 'argument' : conversion de 'float' en 'int', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(93,55): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(200,34): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(200,22): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\MapManager.h(131,1): warning C4715: 'MapManager::recupSpawn' : les chemins de contrôle ne retournent pas tous une valeur
   G2D.vcxproj -> C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Debug\G2D.exe
