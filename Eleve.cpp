@@ -62,8 +62,8 @@ struct Player
 	void InitTexture()
 	{
 		anim.LoadTextures(
-			"sprites\\Idle.png",
-			"sprites\\Walk.png"
+			"sprites\\player\\Idle.png",
+			"sprites\\player\\Walk.png"
 		);
 	}
 
