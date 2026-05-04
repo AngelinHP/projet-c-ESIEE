@@ -130,6 +130,15 @@ struct MapManager
 		}
 	}
 
+	V2 recupESpawn() {
+		for (int y = 0; y < mapHeight; y++) {
+			for (int x = 0; x < mapWidth; x++) {
+				if (map1[(mapHeight - y - 1) * mapWidth + x] == 'N')
+					return V2(x * tilesetSize, y * tilesetSize);
+			}
+		}
+	}
+
 	void InitTilesTexture()
 	{
 		textures[' '] = G2D::ExtractTextureFromPNG("sprites/tileset/floor.png", Transparency::None);

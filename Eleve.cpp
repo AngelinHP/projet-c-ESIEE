@@ -17,7 +17,121 @@
 
 using namespace std;
 
+struct Enemy
+{
+	V2 pos;
+	AnimationHandler anim;
+	MapManager mapMan;
+	enum class Movement { Up, Down, Left, Right, None };
 
+	// Gestion des états
+	int speed;
+	Direction lastDir = Direction::Down;
+	Movement lastMove = Movement::None;
+	map<Movement, V2> dirVectors;
+
+
+	bool isMoving = false;
+	bool canMove = false;
+	bool playerIsInSight = false;
+
+	double currentTime = G2D::elapsedTimeFromStartSeconds();
+	V2 futurePos;
+
+
+	V2 center = V2(pos.x + 32, pos.y + 32);
+
+	Enemy(V2& _pos, int& tilesetSize, MapManager& _map)
+	{
+		pos = _pos;
+		speed = 2;
+		dirVectors = {
+		{Movement::Up, V2(0, tilesetSize)},
+		{Movement::Down, V2(0, -tilesetSize)},
+		{Movement::Left, V2(-tilesetSize, 0)},
+		{Movement::Right, V2(tilesetSize,0)},
+		{Movement::None, V2(0,0)}
+		};
+		futurePos = _pos;
+		mapMan = _map;
+	}
+
+	void InitTexture()
+	{
+		anim.LoadTextures(
+			"sprites\\ennemies\\Idle.png",
+			"sprites\\ennemies\\Walk.png"
+		);
+
+		anim.loadSizes(32, V2(128, 32));
+	}
+
+	bool LineOfSight(V2 playerPos, MapManager& map) {
+		if (!(playerPos.x <= pos.x + 2 * mapMan.tilesetSize && playerPos.x >= pos.x - 2 * mapMan.tilesetSize && playerPos.y <= pos.y + mapMan.tilesetSize && playerPos.y >= pos.y - mapMan.tilesetSize)) {
+			if (!(playerPos.x <= pos.x + mapMan.tilesetSize && playerPos.x >= pos.x - mapMan.tilesetSize && playerPos.y <= pos.y + 2 * mapMan.tilesetSize && playerPos.y >= pos.y - 2 * mapMan.tilesetSize)) {
+				if (!(playerPos == pos + 3 * V2(mapMan.tilesetSize, 0) || playerPos == pos - 3 * V2(mapMan.tilesetSize, 0) || playerPos == pos + 3 * V2(0, mapMan.tilesetSize) || playerPos == pos - 3 * V2(0, mapMan.tilesetSize)))
+					return false;
+			}
+		}
+		return true;
+	}
+
+	void move(V2& playerFuturePos) {
+
+
+		// Mise à jour de l'animateur
+		isMoving = lastMove != Movement::None && !(pos == futurePos);
+		canMove = !mapMan.Mur(futurePos.x / mapMan.tilesetSize, futurePos.y / mapMan.tilesetSize);
+		playerIsInSight = LineOfSight(playerFuturePos, mapMan);
+
+		if (playerIsInSight) {
+			V2 toPlayer = playerFuturePos - pos;
+
+			if(toPlayer.x*toPlayer.x >= toPlayer.y*toPlayer.y){
+				lastMove = toPlayer.x > 0 ? Movement::Right : Movement::Left;
+		}
+		else{
+				lastMove = toPlayer.y > 0 ? Movement::Up : Movement::Down;
+			}
+			futurePos = pos + dirVectors[lastMove];
+		}
+
+		if (!canMove)
+			futurePos = pos;
+		anim.SetDirection(lastDir);
+
+		if (isMoving && canMove)
+			pos = pos + dirVectors[lastMove].GetNormalized() * speed;
+
+		anim.isMoving = isMoving && canMove;
+
+		// On fait avancer le temps de l'animation
+		anim.Update();
+
+	}
+
+	void setcanMove(bool _canMove) {
+		canMove = _canMove;
+		if (!canMove)
+			futurePos = pos;
+	}
+
+	void update(V2& playerPos)
+	{
+		currentTime = G2D::elapsedTimeFromStartSeconds();
+
+		
+		move(playerPos);
+		center = V2(pos.x + 32, pos.y + 32);
+
+
+	}
+
+	void draw(Camera2D& camera)
+	{
+		anim.Draw(camera, pos);
+	}
+};
 
 
 struct Player
@@ -81,10 +195,10 @@ struct Player
 
 	}
 
-	void move() {
+	void move(Enemy& enemy) {
 		// Mise à jour de l'animateur
 		isMoving = lastMove != Movement::None && !(pos == futurePos);
-		canMove = !mapMan.Mur(futurePos.x / mapMan.tilesetSize, futurePos.y / mapMan.tilesetSize);
+		canMove = !mapMan.Mur(futurePos.x / mapMan.tilesetSize, futurePos.y / mapMan.tilesetSize) && !(futurePos == enemy.pos);
 		if(!canMove)
 			futurePos = pos;
 		anim.SetDirection(lastDir);
@@ -105,12 +219,12 @@ struct Player
 			futurePos = pos;
 	}
 
-	void update()
+	void update(Enemy& enemy)
 	{
 		currentTime = G2D::elapsedTimeFromStartSeconds();
 
 		registerMovement();
-		move();
+		move(enemy);
 		center = V2(pos.x + 32, pos.y + 32);
 
 	}
@@ -120,6 +234,8 @@ struct Player
 		anim.Draw(camera, pos);
 	}
 };
+
+
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -133,8 +249,10 @@ struct GameData
 	MapManager& map = MapManager();
 
 	V2 spawn = map.recupSpawn();
+	V2 eSpawn = map.recupESpawn();
 
 	Player& player = Player(spawn, map.tilesetSize, map);
+	Enemy& enemy = Enemy(eSpawn, map.tilesetSize, map);
 
 	Inventory& inventory = Inventory();
 
@@ -158,6 +276,7 @@ void Render(const GameData& G)
 	G.map.drawMap(G.camera);
 
 	G.player.draw(G.camera);
+	G.enemy.draw(G.camera);
 
 	if (G.player.isInInventory)
 		G.inventory.drawInventory(G.camera, 200, 200);
@@ -180,7 +299,8 @@ void Logic(GameData & G) // appel� 20 fois par seconde
 {
 	G.camera.update(G.player.pos);
 
-	G.player.update();
+	G.player.update(G.enemy);
+	G.enemy.update(G.player.futurePos);
 }
  
 
@@ -204,6 +324,7 @@ int main(int argc, char* argv[])
 
 	// lance l'application en sp�cifiant les deux fonctions utilis�es et l'instance de GameData
 	G.player.InitTexture();
+	G.enemy.InitTexture();
 	G.map.InitTilesTexture();
 	G.inventory.addItem("Baton");
 	G.inventory.addItem("Couteau");

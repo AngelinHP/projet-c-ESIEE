@@ -25,6 +25,11 @@ public:
         walkTexture = G2D::ExtractTextureFromPNG(walkPath, Transparency::None);
     }
 
+    void loadSizes(int _spriteSize, V2 _textureTotalSize) {
+        spriteSize = _spriteSize;
+        textureTotalSize = _textureTotalSize;
+	}
+
     void Update() {
         timer++;
 
