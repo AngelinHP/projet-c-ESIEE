@@ -1,4 +1,8 @@
 #pragma once
+
+#include <map>
+#include <iostream>
+
 #include "G2D.h"
 #include "Camera2D.h"
 
@@ -9,41 +13,57 @@ public:
     int spriteSize = 32;
     V2 textureTotalSize = V2(128, 128);
 
-    int idleTexture = 0;
-    int walkTexture = 0;
-
     Direction currentDir = Direction::Down;
     bool isMoving = false;
+	bool isAttacking = false;
 
     int animSpeed = 8;
-    int frameCount = 4;
     int timer = 0;
     int currentFrame = 0;
 
-    void LoadTextures(const std::string& idlePath, const std::string& walkPath) {
-        idleTexture = G2D::ExtractTextureFromPNG(idlePath, Transparency::None);
-        walkTexture = G2D::ExtractTextureFromPNG(walkPath, Transparency::None);
-    }
+    map<string, int> textures;
+    map<string, V2> textureSizes;
+    map<string, int> framecounts;
+	map<string, int> animSpeeds;
 
-    void loadSizes(int _spriteSize, V2 _textureTotalSize) {
-        spriteSize = _spriteSize;
-        textureTotalSize = _textureTotalSize;
-	}
+    void LoadTexture(const std::string& name, const std::string& path, int _spriteSize, V2 _textureTotalSize, int _frameCount) {
+       int texture = G2D::ExtractTextureFromPNG(path, Transparency::None);
+	   if (texture == 0) {
+		   std::cout << "Failed to load texture: " << path << std::endl;
+		   return;
+	   }
+	   textures[name] = texture;
+	   textureSizes[name] = _textureTotalSize;
+
+       spriteSize = _spriteSize;
+	   framecounts[name] = _frameCount;
+    }
 
     void Update() {
         timer++;
 
-        int currentSpeed = isMoving ? animSpeed : 15;
+        int currentSpeed = isMoving && !isAttacking ? animSpeed : 15;
+        currentSpeed = isAttacking ? 15 : currentSpeed;
 
-        currentFrame = (timer / currentSpeed) % frameCount;
+        currentFrame = (timer / currentSpeed) % framecounts[GetCurrentTextureName()];
+
+        if(timer >= currentSpeed * framecounts[GetCurrentTextureName()]) {
+            timer = 0;
+        }
     }
+
+	std::string GetCurrentTextureName() {
+		return isMoving ? "Walk" : "Idle";
+	}
 
     void SetDirection(Direction dir) {
         currentDir = dir;
     }
 
     int GetCurrentTexture() {
-        return isMoving ? walkTexture : idleTexture;
+        int texture = isMoving && !isAttacking ? textures["Walk"] : textures["Idle"];
+		texture = isAttacking ? textures["Attack"] : texture;
+        return texture;
     }
 
     int GetSrcX() {
@@ -65,6 +85,8 @@ public:
         int srcY = GetSrcY();
         int currentTex = GetCurrentTexture();
 
+		//cout << "srcY: " << srcY << endl;
+
         if (currentTex == 0) return;
 
 
@@ -74,7 +96,7 @@ public:
             V2(spriteSize, spriteSize)*camera.zoom,
             V2(srcX, srcY),
             V2(spriteSize, spriteSize),
-            textureTotalSize
+            textureSizes[GetCurrentTextureName()]
         );
     }
 };
