@@ -53,6 +53,7 @@ public:
     }
 
 	std::string GetCurrentTextureName() {
+        if (isAttacking) return "Attack";
 		return isMoving ? "Walk" : "Idle";
 	}
 

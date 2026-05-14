@@ -82,28 +82,24 @@ struct Enemy
 		// Attaque en fonction de la direction
 		if (isAttacking) {
 			anim.isAttacking = true;
-			if (anim.timer >= 32) {
+			// 15 de vitesse * 1 frame = 15 donc on arrete a 14
+			if (anim.timer >= 14) {
 				isAttacking = false;
 				anim.isAttacking = false;
 				turn = true;
 			}
-
-			anim.Update();
 		}
 	}
 
 	void move(V2& playerFuturePos, bool& turn) {
 
-
 		// Mise à jour de l'animateur
 		playerIsInSight = LineOfSight(playerFuturePos);
 		playerIsInRange = rangeOfAttack(playerFuturePos);
 		isMoving = lastMove != Movement::None && !(pos == futurePos);
-		
-		
+		V2 toPlayer = playerFuturePos - futurePos;
 
 		if (!playerIsInRange && playerIsInSight && !turn) {
-			V2 toPlayer = playerFuturePos - futurePos;
 			if (pos == futurePos) {
 				if (toPlayer.x * toPlayer.x >= toPlayer.y * toPlayer.y && canMove) {
 
@@ -123,8 +119,21 @@ struct Enemy
 		else if (playerIsInRange && !turn)
 		{
 			futurePos = pos;
-			isAttacking = true;
+
+			// On oriente l'ennemi vers le joueur avant l'attaque
+			if (toPlayer.x > 0) lastDir = Direction::Right;
+			else if (toPlayer.x < 0) lastDir = Direction::Left;
+			else if (toPlayer.y > 0) lastDir = Direction::Up;
+			else if (toPlayer.y < 0) lastDir = Direction::Down;
+
+			if (!isAttacking) {
+				isAttacking = true;
+				anim.timer = 0;
+			}
 			attack(turn);
+		}
+		else {
+			turn = true; // Si on ne voit pas le joueur il passe son tour
 		}
 
 		canMove = !mapMan.Mur(futurePos.x / mapMan.tilesetSize, futurePos.y / mapMan.tilesetSize);
@@ -217,19 +226,15 @@ struct Player
 	void registerMovement()
 	{
 		if (pos == futurePos) {
-			if(!isInInventory || !isAttacking)
+			if(!isInInventory && !isAttacking && playerTurn)
 				if (G2D::isKeyPressed(Key::Z)) { lastDir = Direction::Up; lastMove = Movement::Up; futurePos = pos + dirVectors[Movement::Up];}
 				else if (G2D::isKeyPressed(Key::S)) { lastDir = Direction::Down; lastMove = Movement::Down; futurePos = pos + dirVectors[Movement::Down]; }
 				else if (G2D::isKeyPressed(Key::Q)) { lastDir = Direction::Left; lastMove = Movement::Left; futurePos = pos + dirVectors[Movement::Left];}
 				else if (G2D::isKeyPressed(Key::D)) { lastDir = Direction::Right; lastMove = Movement::Right; futurePos = pos + dirVectors[Movement::Right];}
-				else if (G2D::isKeyPressed(Key::F)) { isAttacking = true; }
+				else if (G2D::keyHasBeenHit(Key::F)) { isAttacking = true; anim.timer = 0; }
 			if (G2D::keyHasBeenHit(Key::I)) { isInInventory = !isInInventory; }
 		}
-
-		if (futurePos == pos && !isAttacking) {
-			playerTurn = true;
-		}
-
+		
 	}
 
 	void move(Enemy& enemy) {
@@ -257,16 +262,28 @@ struct Player
 		// Attaque en fonction de la direction
 		if (isAttacking) {
 			anim.isAttacking = true;
-			if (anim.timer >= 32) {
+			// Meme logique que pour l'ennemie
+			if (anim.timer >= 59) {
 				isAttacking = false;
 				anim.isAttacking = false;
 				playerTurn = false;
 			}
-
-			anim.Update();
 		}
 	}
 
+	// la vie
+	int maxHealth = 100;
+	int currentHealth = 100;
+
+	void takeDamage(int amount) {
+		currentHealth -= amount;
+		if (currentHealth < 0) currentHealth = 0; // On empêche la vie de passer en négatif
+	}
+
+	void heal(int amount) {
+		currentHealth += amount;
+		if (currentHealth > maxHealth) currentHealth = maxHealth; // On empêche de dépasser le max
+	}
 
 	void setcanMove(bool _canMove) {
 		canMove = _canMove;
@@ -306,7 +323,7 @@ struct Player
 
 struct GameData
 {
-	int HeighPix = 1000;   // hauteur de la fen�tre d'application
+	int HeighPix = 800;   // hauteur de la fen�tre d'application
 	int WidthPix = 1600;   // largeur de la fen�tre d'application
 
 	MapManager& map = MapManager();
@@ -344,6 +361,28 @@ void Render(const GameData& G)
 	if (G.player.isInInventory)
 		G.inventory.drawInventory(G.camera, 200, 200);
 
+	int uiX = 20;
+	int uiY = 700;
+	int barMaxWidth = 300;
+	int barHeight = 20;
+
+	// Fond de la barre
+	G2D::drawRectangle(V2(uiX, uiY), V2(barMaxWidth, barHeight), Color::Red, true);
+
+	// Calcul de la largeur de la barre verte en fonction du pourcentage de vie
+	int currentBarWidth = (G.player.currentHealth * barMaxWidth) / G.player.maxHealth;
+
+	// Dessin de la jauge verte (seulement s'il reste de la vie)
+	if (currentBarWidth > 0) {
+		G2D::drawRectangle(V2(uiX, uiY), V2(currentBarWidth, barHeight), Color::Green, true);
+	}
+
+	// Contour blanc
+	G2D::drawLine(V2(uiX, uiY), V2(uiX + barMaxWidth, uiY), Color::White);
+	G2D::drawLine(V2(uiX, uiY), V2(uiX, uiY + barHeight), Color::White);
+	G2D::drawLine(V2(uiX + barMaxWidth, uiY), V2(uiX + barMaxWidth, uiY + barHeight), Color::White);
+	G2D::drawLine(V2(uiX, uiY + barHeight), V2(uiX + barMaxWidth, uiY + barHeight), Color::White);
+
 	G2D::Show();
 }
 
@@ -365,6 +404,43 @@ void Logic(GameData & G) // appel� 20 fois par seconde
 	G.player.update(G.enemy);
 	bool turn = G.player.getPlayerTurn();
 	G.enemy.update(G.player.futurePos, turn);
+	G.player.setPlayerTurn(turn);// on mets a jour le joueur en focntion de la décision de l'ennemi
+
+	// On vérifie que c'est bien à nous de jouer, qu'on ne bouge pas et qu'on n'attaque pas si c'est le cas on peut prendre une potion
+	if (G.player.getPlayerTurn() && G.player.pos == G.player.futurePos && !G.player.isAttacking) {
+		if (G2D::keyHasBeenHit(Key::A)) {
+			// On vérifie qu'on a au moins 1 potion ET qu'on n'est pas déjà full life
+			if (G.inventory.items["Potion de vie"] > 0 && G.player.currentHealth < G.player.maxHealth) {
+				G.inventory.removeItem("Potion de vie"); // On consomme l'objet
+				G.player.heal(30);                       // On rend 30 HP
+
+				// On passe le tour a l'ennemi
+				G.player.setPlayerTurn(false);
+			}
+		}
+	}
+
+	// Gestion du faire de ramasser des objets et les mettre dans l'inventaire
+	if (G.player.pos == G.player.futurePos) {
+
+		// On convertit la position du joueur en pixels vers une position sur la grille (x, y)
+		int tileX = G.player.pos.x / G.map.tilesetSize;
+		int tileY = G.player.pos.y / G.map.tilesetSize;
+
+		// Calcul pour trouver l'index dans le string avec TA FORMULE FREROT G PAS COMPRIS CE QUE CA FAIS g juste compris que ca récup l'indice d'ou on est mais jsp comment je te laisse avec ton caca
+		int charIndex = (G.map.mapHeight - tileY - 1) * G.map.mapWidth + tileX;
+		char currentChar = G.map.map1[charIndex];
+
+		// On regarde s'il y a un objet sous ses pieds
+		if (currentChar == 'V') {
+			G.inventory.addItem("Potion de vie"); // Ajoute à l'inventaire
+			G.map.map1[charIndex] = ' '; // Efface l'objet de la carte
+		}
+		else if (currentChar == 'K') {
+			G.inventory.addItem("Katana");
+			G.map.map1[charIndex] = ' ';
+		}
+	}
 }
  
 
@@ -390,8 +466,6 @@ int main(int argc, char* argv[])
 	G.player.InitTexture();
 	G.enemy.InitTexture();
 	G.map.InitTilesTexture();
-	G.inventory.addItem("Baton");
-	G.inventory.addItem("Couteau");
 	
 
 	G2D::Run(Logic, Render, G, callToLogicPerSec, true);

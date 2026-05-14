@@ -95,12 +95,25 @@ struct MapManager
 		);
 	}
 
+	void drawItem(char itemType, int x, int y, Camera2D& camera) {
+		// On récupère la texture correspondante (soit 'V', soit 'K')
+		int currentTexture = textures[itemType];
+
+		// On calcule la position et la taille à l'écran
+		V2 screenPos = camera.renderWcamera(V2(x * tilesetSize, y * tilesetSize));
+		V2 screenSize = V2(tilesetSize, tilesetSize) * camera.zoom;
+
+		// On dessine la texture sur la case
+		G2D::drawRectWithTexture(currentTexture, screenPos, screenSize);
+	}
+
 	void drawMap(Camera2D& camera)
 	{
 		for (int y = 0; y < mapHeight; y++) {
 			for (int x = 0; x < mapWidth; x++) {
 			
-
+				int charIndex = (mapHeight - y - 1) * mapWidth + x;
+				char currentChar = map1[charIndex];
 
 				V2 screenPos = camera.renderWcamera(V2(x * tilesetSize, y * tilesetSize));
 
@@ -108,11 +121,34 @@ struct MapManager
 
 				G2D::drawRectWithTexture(textures[' '], screenPos, screenSize);
 
-				if (map1[(mapHeight - y - 1) * mapWidth + x] == 'M')
+				if (currentChar == 'M')
 					drawTextureWall(x, y, camera);
-				if (map1[(mapHeight - y - 1) * mapWidth + x] == 'C')
+				if (currentChar == 'C')
 					drawTextureCorner(x, y, camera);
+				
+				if (currentChar == 'V' || currentChar == 'K') {
 
+					// On récupère la texture
+					int textureToDraw = textures[currentChar];
+
+					// On définit la taille d'origine selon l'objet
+					V2 textureRawSize;
+					if (currentChar == 'V') textureRawSize = V2(9, 11);
+					if (currentChar == 'K') textureRawSize = V2(6, 14);
+
+					// Taille de la case à l'écran et taille de l'objet à l'écran
+					V2 tileSizeOnScreen = V2(tilesetSize, tilesetSize) * camera.zoom;
+					V2 adjustedSize = textureRawSize * camera.zoom;
+
+					// Calcul du décalage pour centrer les objets
+					V2 offset = V2(
+						(tileSizeOnScreen.x - adjustedSize.x) / 2,
+						(tileSizeOnScreen.y - adjustedSize.y) / 2
+					);
+
+					// On dessine en ajoutant le décalage à la position de base
+					G2D::drawRectWithTexture(textureToDraw, screenPos + offset, adjustedSize);
+				}
 
 				
 			}
@@ -144,6 +180,8 @@ struct MapManager
 		textures[' '] = G2D::ExtractTextureFromPNG("sprites/tileset/floor.png", Transparency::None);
 		textures['M'] = G2D::ExtractTextureFromPNG("sprites/tileset/walls.png", Transparency::None);
 		textures['C'] = G2D::ExtractTextureFromPNG("sprites/tileset/corners.png", Transparency::None);
+		textures['V'] = G2D::ExtractTextureFromPNG("sprites/items/LifePot.png", Transparency::None);
+		textures['K'] = G2D::ExtractTextureFromPNG("sprites/items/Katana.png", Transparency::None);
 	}
 
 };
