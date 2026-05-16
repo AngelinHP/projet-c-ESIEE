@@ -26,8 +26,9 @@ public:
     map<string, V2> textureSizes;
     map<string, int> framecounts;
 	map<string, int> animSpeeds;
+    map<string, bool> horizontalSpriteSheets;
 
-    void LoadTexture(const std::string& name, const std::string& path, int _spriteSize, V2 _textureTotalSize, int _frameCount) {
+    void LoadTexture(const std::string& name, const std::string& path, int _spriteSize, V2 _textureTotalSize, int _frameCount, bool _horizontalSpriteSheet = false) {
        int texture = G2D::ExtractTextureFromPNG(path, Transparency::None);
 	   if (texture == 0) {
 		   std::cout << "Failed to load texture: " << path << std::endl;
@@ -38,6 +39,7 @@ public:
 
        spriteSize = _spriteSize;
 	   framecounts[name] = _frameCount;
+	   horizontalSpriteSheets[name] = _horizontalSpriteSheet;
     }
 
     void Update() {
@@ -70,7 +72,11 @@ public:
         return texture;
     }
 
-    int GetSrcX() {
+    int GetSrcX(const string& texName) {
+
+        if (horizontalSpriteSheets[texName])
+            return currentFrame * spriteSize;
+
         switch (currentDir) {
         case Direction::Down:  return 0;
         case Direction::Up:    return 32;
@@ -80,13 +86,17 @@ public:
         }
     }
 
-    int GetSrcY() {
+    int GetSrcY(const string& texName) {
+
+        if (horizontalSpriteSheets[texName])
+            return 0;
         return currentFrame * spriteSize;
     }
 
     void Draw(Camera2D& camera, V2 drawPos) {
-        int srcX = GetSrcX();
-        int srcY = GetSrcY();
+		string texName = GetCurrentTextureName();
+        int srcX = GetSrcX(texName);
+        int srcY = GetSrcY(texName);
         int currentTex = GetCurrentTexture();
 
 		//cout << "srcY: " << srcY << endl;

@@ -25,9 +25,9 @@ struct MapManager
 		"MMMMCM    MCMMMMMMMMMMMMMMMMMMMMMMM        MMMMM"
 		"MMMMM      MMMMMMMMMMMMMMMMMMMMMMMM        MMMMM"
 		"MMMMM  V   MMMMMMMMMMMMMMMMMMMMMMMM        MMMMM"
-		"MMMMM VSV  MMMMMMMMMMMMMMMMMMMMMMMM   R    MMMMM"
+		"MMMMM V V  MMMMMMMMMMMMMMMMMMMMMMMM   R    MMMMM"
 		"MMMMM  K   MMMMMMMMMMMMMMMMMMMMMMMM        MMMMM"
-		"MMMMM      MMMMMMMMMMMMMMMMMMMMMMMM        MMMMM"
+		"MMMMM      MMMMMMMMMMMMMMMMMMMMMMMM   S    MMMMM"
 		"MMMMM      MMMMMMMMMMMMMMMMMMMMMMMM        MMMMM"
 		"MMMMM      MMMCMMMMMMMMMCMMMMMMMMMM        MMMMM"
 		"MMMMCM    MCMMM         MMMMMMMMMMM        MMMMM"
@@ -173,6 +173,14 @@ struct MapManager
 					return V2(x * tilesetSize, y * tilesetSize);
 			}
 		}
+	}
+
+	V2 recupBossSpawn(){
+		for (int y = 0; y < mapHeight; y++)
+			for (int x = 0; x < mapWidth; x++)
+				if (map1[(mapHeight - y - 1) * mapWidth + x] == 'R')
+					return V2(x * tilesetSize, y * tilesetSize);
+		return V2(0, 0);
 	}
 
 	void InitTilesTexture()

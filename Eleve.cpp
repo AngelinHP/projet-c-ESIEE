@@ -85,7 +85,7 @@ struct Enemy
 		turnDone = true; // Le tour du joueur est passé
 	}	
 
-	bool LineOfSight(V2 playerPos) {
+	virtual bool LineOfSight(V2 playerPos) {
 		if (!(playerPos.x <= pos.x + 2 * mapMan.tilesetSize 
 			&& playerPos.x >= pos.x - 2 * mapMan.tilesetSize && playerPos.y <= pos.y + mapMan.tilesetSize && playerPos.y >= pos.y - mapMan.tilesetSize))
 		if (!(playerPos.x <= pos.x + mapMan.tilesetSize 
@@ -101,7 +101,7 @@ struct Enemy
 	}
 
 
-	bool rangeOfAttack(V2 playerPos) {
+	virtual bool rangeOfAttack(V2 playerPos) {
 		return playerPos == pos + V2(mapMan.tilesetSize, 0) 
 			|| playerPos == pos - V2(mapMan.tilesetSize, 0) 
 			|| playerPos == pos + V2(0, mapMan.tilesetSize) 
@@ -122,7 +122,7 @@ struct Enemy
 		}
 	}
 
-	void ChangeToPlayerDirection(V2& playerPos) {
+	virtual void ChangeToPlayerDirection(V2& playerPos) {
 		V2 toPlayer = playerPos - pos;
 		if (toPlayer.x > 0) lastDir = Direction::Right;
 		else if (toPlayer.x < 0) lastDir = Direction::Left;
@@ -130,7 +130,7 @@ struct Enemy
 		else if (toPlayer.y < 0) lastDir = Direction::Down;
 	}
 
-	void nextAction(V2& playerPos,V2& playerFuturePos) {
+	virtual void nextAction(V2& playerPos,V2& playerFuturePos) {
 
 		// Si déjà en train d'agir, on ne re-décide pas
 		if (isAttacking || isMoving || turnDone) return;
@@ -157,7 +157,7 @@ struct Enemy
 
 	}
 
-	void registerMove(V2& playerFuturePos) {
+	virtual void registerMove(V2& playerFuturePos) {
 
 		// Mise à jour de l'animateur
 		V2 toPlayer = playerFuturePos - futurePos;
@@ -196,16 +196,25 @@ struct Enemy
 
 	void move() {
 		if (isMoving && canMove && !(futurePos == pos)) {
-			pos = pos + dirVectors[lastMove].GetNormalized() * speed;
+
+			V2 toFuture = V2(futurePos.x - pos.x, futurePos.y - pos.y);
+			float distSq = toFuture.x * toFuture.x + toFuture.y * toFuture.y;
+
+			// Si on est à moins d'un pas, on arrive directement
+			if (distSq <= speed * speed)
+				pos = futurePos;
+			else
+				pos = pos + dirVectors[lastMove].GetNormalized() * speed;
 		}
+
 		if (isMoving && futurePos == pos) {
 			isMoving = false;
 			lastMove = Movement::None;
 			turnDone = true;
 		}
+
 		anim.SetDirection(lastDir);
 		anim.isMoving = isMoving && canMove;
-		// On fait avancer le temps de l'animation
 		anim.Update();
 	}
 
@@ -238,6 +247,194 @@ struct Enemy
 	{
 		if(isAlive)
 			anim.Draw(camera, pos);
+	}
+};
+
+
+struct Boss : public Enemy {
+
+	int maxHealth = 300;
+	int phase = 1;
+
+	int bossSize = 2; // taille en cases
+
+	bool isJumping = false;
+	bool isCharging = false;
+
+	Boss(V2& _pos, int& tilesetSize, MapManager& _map)
+		: Enemy(_pos, tilesetSize, _map)
+	{
+		currentHealth = 300;
+		attackDamage = 25;
+	}
+
+	void InitTexture() {
+		// Même sprites que l'ennemi pour l'instant
+		anim.LoadTexture("Idle", "sprites\\boss\\phase1\\Idle.png", 60, V2(360, 60), 6, true);
+		anim.LoadTexture("Walk", "sprites\\boss\\phase1\\Idle.png", 60, V2(360, 60), 6, true);
+		anim.LoadTexture("Attack", "sprites\\boss\\phase1\\Attack.png", 60, V2(240, 60), 4, true);
+		anim.LoadTexture("Charge", "sprites\\boss\\phase1\\Charge.png", 60, V2(120, 60), 2, true);
+		anim.LoadTexture("Jump", "sprites\\boss\\phase1\\Jump.png", 60, V2(300, 60), 5, true);
+	}
+
+	// Vérifie si une position monde est occupée par le boss
+	bool HitBox(V2 anchor, V2 worldPos) {
+		for (int i = 0; i < bossSize; i++)
+			for (int j = 0; j < bossSize; j++)
+				if (worldPos == V2(anchor.x + i * mapMan.tilesetSize, anchor.y + j * mapMan.tilesetSize))
+					return true;
+		return false;
+	}
+	
+	// Vérifie si toutes les cases d'une zone 4x4 sont libres
+	bool canLand(V2& anchor, V2& playerFuturepos) {
+		for (int i = 0; i < bossSize; i++)
+			for (int j = 0; j < bossSize; j++) {
+				V2 tile = V2(anchor.x + i * mapMan.tilesetSize, anchor.y + j * mapMan.tilesetSize);
+				if (mapMan.Mur(tile.x / mapMan.tilesetSize, tile.y / mapMan.tilesetSize) || HitBox(playerFuturepos, tile))
+					return false;
+			}
+		return true;
+	}
+
+	// Choisit la bonne texture selon l'état du boss
+	string getBossTextureName() {
+		if (isJumping)   return "Jump";
+		if (isCharging)  return "Charge";
+		if (isAttacking) return "Attack";
+		return "Idle"; // déplacement et repos = Idle
+	}
+
+	bool LineOfSight(V2 playerPos) override {
+		int range = 7 * mapMan.tilesetSize;
+		return (playerPos.x <= pos.x + range && playerPos.x >= pos.x - range && playerPos.y == pos.y)
+			|| (playerPos.y <= pos.y + range && playerPos.y >= pos.y - range && playerPos.x == pos.x)
+			|| (abs(playerPos.x - pos.x) <= 2 * mapMan.tilesetSize
+				&& abs(playerPos.y - pos.y) <= 2 * mapMan.tilesetSize);
+	}
+
+	bool rangeOfAttack(V2 playerPos) override {
+		int ts = mapMan.tilesetSize;
+		for (int i = 0; i < bossSize; i++) {
+			if (playerPos == V2(pos.x + i * ts, pos.y - ts))              return true; // bas
+			if (playerPos == V2(pos.x + i * ts, pos.y + bossSize * ts))     return true; // haut
+			if (playerPos == V2(pos.x - ts, pos.y + i * ts))            return true; // gauche
+			if (playerPos == V2(pos.x + bossSize * ts, pos.y + i * ts))     return true; // droite
+		}
+		return false;
+	}
+
+	void ChangeToPlayerDirection(V2& playerPos) override {
+		V2 center = V2(pos.x + (bossSize / 2) * mapMan.tilesetSize,
+			pos.y + (bossSize / 2) * mapMan.tilesetSize);
+		V2 toPlayer = playerPos - center;
+		if (abs(toPlayer.x) >= abs(toPlayer.y))
+			lastDir = toPlayer.x > 0 ? Direction::Right : Direction::Left;
+		else
+			lastDir = toPlayer.y > 0 ? Direction::Up : Direction::Down;
+	}
+
+	void registerMove(V2& playerFuturePos) override {
+		V2 toPlayer = playerFuturePos - pos;
+
+		if (toPlayer.x != 0) {
+			lastMove = toPlayer.x > 0 ? Movement::Right : Movement::Left;
+			lastDir = toPlayer.x > 0 ? Direction::Right : Direction::Left;
+		}
+		else {
+			lastMove = toPlayer.y > 0 ? Movement::Up : Movement::Down;
+			lastDir = toPlayer.y > 0 ? Direction::Up : Direction::Down;
+		}
+
+		V2 dir = dirVectors[lastMove];
+		V2 landing = pos;
+		int jumpDist = rand() % 3 + 1;
+
+		for (int i = 1; i <= jumpDist; i++) {
+			V2 candidate = V2(pos.x + dir.x * i, pos.y + dir.y * i);
+			if (canLand(candidate, playerFuturePos))  //vérifie les 4 cases
+				landing = candidate;
+			else
+				break;
+		}
+
+		futurePos = landing;
+		isMoving = !(futurePos == pos);
+		isJumping = isMoving;
+		canMove = true;
+		speed = 4;
+	}
+
+	void nextAction(V2& playerPos, V2& playerFuturePos) override {
+		if (isAttacking || isMoving || turnDone) return;
+
+		playerIsInSight = LineOfSight(playerFuturePos);
+		playerIsInRange = rangeOfAttack(playerFuturePos);
+
+		if (!playerIsInRange && playerIsInSight) {
+			registerMove(playerFuturePos);          // saut vers le joueur
+		}
+		else if (playerIsInRange) {
+			if (rand() % 100 < 30)
+				flee(playerFuturePos);              // 30% : fuite
+			else {
+				isAttacking = true;                 // 70% : attaque
+				anim.timer = 0;
+				ChangeToPlayerDirection(playerPos);
+			}
+		}
+		else
+			turnDone = true;
+	}
+
+	void flee(V2& playerFuturePos) {
+		// Construire une cible dans la direction OPPOSÉE au joueur
+		V2 toPlayer = playerFuturePos - pos;
+		V2 fleeTarget = V2(pos.x - toPlayer.x, pos.y - toPlayer.y);
+		registerMove(fleeTarget); // réutilise le saut, mais en sens inverse
+	}
+
+	void updatePhase() {
+		if (phase == 1 && currentHealth < maxHealth / 2) {
+			phase = 2;
+			attackDamage = 40;
+			cout << "[BOSS] Phase 2 !" << endl;
+		}
+	}
+
+	// Override : updatePhase en plus à chaque tour
+	bool update(V2& playerPos, V2& playerFuturePos) {
+		updatePhase();
+
+		bool wasMoving = isMoving;
+		bool done = Enemy::update(playerPos, playerFuturePos);
+
+		// Atterrissage : le boss vient d'arriver
+		if (wasMoving && !isMoving) {
+			isJumping = false;
+			speed = 2; // reset vitesse normale
+		}
+
+		return done;
+	}
+
+	void draw(Camera2D& camera) {
+		if (!isAlive) return;
+
+		string texName = getBossTextureName();
+		if (anim.textures.find(texName) == anim.textures.end()) return;
+
+		int srcX = anim.currentFrame * anim.spriteSize; // horizontal strip
+		int srcY = 0;
+
+		G2D::drawSpriteFrame(
+			anim.textures[texName],
+			camera.renderWcamera(pos),
+			V2(anim.spriteSize, anim.spriteSize) * camera.zoom,
+			V2(srcX, srcY),
+			V2(anim.spriteSize, anim.spriteSize),
+			anim.textureSizes[texName]
+		);
 	}
 };
 
@@ -300,7 +497,7 @@ struct Player
 		return !(pos == futurePos) || dealDamage;
 	}
 
-	void registerMovement(Enemy& enemy)
+	void registerMovement(Enemy& enemy, Boss& boss)
 	{
 		if (pos == futurePos) {
 			if (!isInInventory && !isAttacking) {
@@ -318,7 +515,10 @@ struct Player
 
 				if (newMove != Movement::None) {
 					lastDir = newDir; // la direction visuelle est mise à jour même si bloqué
-					bool wallBlocked = mapMan.Mur(newPos.x / mapMan.tilesetSize, newPos.y / mapMan.tilesetSize) || (newPos == enemy.futurePos && enemy.isAlive);
+					bool wallBlocked = mapMan.Mur(newPos.x / mapMan.tilesetSize, newPos.y / mapMan.tilesetSize)
+						|| (newPos == enemy.futurePos && enemy.isAlive)
+						|| (boss.isAlive && boss.HitBox(boss.pos, newPos))      // cases actuelles
+						|| (boss.isAlive && boss.HitBox(boss.futurePos, newPos)); // cases futures					
 					if (!wallBlocked) {
 						futurePos = newPos; 
 						lastMove = newMove;
@@ -331,11 +531,13 @@ struct Player
 		
 	}
 
-	void move(Enemy& enemy) {
+	void move(Enemy& enemy, Boss& boss) {
 		// Mise à jour de l'animateur
 		isMoving = lastMove != Movement::None && !(pos == futurePos);
-		canMove = !mapMan.Mur(futurePos.x / mapMan.tilesetSize, futurePos.y / mapMan.tilesetSize) && !(futurePos == enemy.futurePos && enemy.isAlive);
-
+		canMove = !mapMan.Mur(futurePos.x / mapMan.tilesetSize, futurePos.y / mapMan.tilesetSize)
+			&& !(futurePos == enemy.futurePos && enemy.isAlive)
+			&& !(boss.isAlive && boss.HitBox(boss.pos, futurePos))
+			&& !(boss.isAlive && boss.HitBox(boss.futurePos, futurePos));
 		if(!canMove) futurePos = pos;
 
 		anim.SetDirection(lastDir);
@@ -384,10 +586,10 @@ struct Player
 		if (currentHealth > maxHealth) currentHealth = maxHealth; // On empêche de dépasser le max
 	}
 
-	void animation(Enemy& enemy)
+	void animation(Enemy& enemy, Boss& boss)
 	{
 
-		move(enemy);
+		move(enemy, boss);
 		attack();
 		
 
@@ -396,8 +598,8 @@ struct Player
 
 	}
 
-	bool handleInput(Enemy& enemy) {
-		registerMovement(enemy);
+	bool handleInput(Enemy& enemy, Boss& boss) {
+		registerMovement(enemy, boss);
 		return hasActed();
 	}
 
@@ -424,14 +626,16 @@ struct GameData
 
 	bool playerHasActed = false;
 
-	enum class TurnState { Player, Enemy };
+	enum class TurnState { Player, Enemy, Boss };
 	TurnState currentTurn = TurnState::Player;
 
 	MapManager& map = MapManager();
 
 	V2 spawn = map.recupSpawn();
 	V2 eSpawn = map.recupESpawn();
-
+	V2 bossSpawn = map.recupBossSpawn();
+	
+	Boss& boss = Boss(bossSpawn, map.tilesetSize, map);
 	Player& player = Player(spawn, map.tilesetSize, map);
 	Enemy& enemy = Enemy(eSpawn, map.tilesetSize, map);
 
@@ -464,6 +668,7 @@ void Render(const GameData& G)
 
 	G.player.draw(G.camera);
 	G.enemy.draw(G.camera);
+	G.boss.draw(G.camera);
 
 	if (G.player.isInInventory)
 		G.inventory.drawInventory(G.camera, 200, 200);
@@ -503,7 +708,7 @@ void Logic(GameData & G) // appel� 20 fois par seconde
 {
 	G.camera.update(G.player.pos);
 
-	G.player.animation(G.enemy);
+	G.player.animation(G.enemy, G.boss);
 
 	if(G.currentTurn == GameData::TurnState::Player) {
 
@@ -528,12 +733,18 @@ void Logic(GameData & G) // appel� 20 fois par seconde
 				G.map.map1[charIndex] = ' ';
 			}
 
-			G.playerHasActed = G.player.handleInput(G.enemy);
+			G.playerHasActed = G.player.handleInput(G.enemy, G.boss);
 
 			if(G.player.dealDamage && G.player.rangeOfAttack(G.enemy.pos))
 				G.enemy.takeDamage(G.player.attackDamage);
+			if (G.player.dealDamage && G.player.rangeOfAttack(G.boss.pos))
+				G.boss.takeDamage(G.player.attackDamage);
 		
 			G.player.setDealDamage(false);
+		}
+		else
+		{
+			G.playerHasActed = false;
 		}
 
 
@@ -550,6 +761,7 @@ void Logic(GameData & G) // appel� 20 fois par seconde
 		
 			if (G.playerHasActed) {
 				G.enemy.turnDone = false; // On reset le tour de l'ennemi pour qu'il puisse agir à son tour
+				G.boss.turnDone = false;
 				G.currentTurn = GameData::TurnState::Enemy;
 			}
 	}
@@ -564,7 +776,14 @@ void Logic(GameData & G) // appel� 20 fois par seconde
 		}
 
 		if (enemyDone)
-			G.currentTurn = GameData::TurnState::Player;
+			G.currentTurn = GameData::TurnState::Boss;
+	}
+
+
+	else if (G.currentTurn == GameData::TurnState::Boss) {
+		bool bossDone = G.boss.update(G.player.pos, G.player.futurePos);
+		if (G.boss.dealDamage) { G.player.takeDamage(G.boss.attackDamage); G.boss.dealDamage = false; }
+		if (bossDone) G.currentTurn = GameData::TurnState::Player;
 	}
 
 	
@@ -592,6 +811,7 @@ int main(int argc, char* argv[])
 	// lance l'application en sp�cifiant les deux fonctions utilis�es et l'instance de GameData
 	G.player.InitTexture();
 	G.enemy.InitTexture();
+	G.boss.InitTexture();
 	G.map.InitTilesTexture();
 	
 
