@@ -194,7 +194,7 @@ struct Enemy
 
 	}
 
-	void move() {
+	virtual void move() {
 		if (isMoving && canMove && !(futurePos == pos)) {
 
 			V2 toFuture = V2(futurePos.x - pos.x, futurePos.y - pos.y);
@@ -306,11 +306,29 @@ struct Boss : public Enemy {
 	}
 
 	bool LineOfSight(V2 playerPos) override {
-		int range = 7 * mapMan.tilesetSize;
-		return (playerPos.x <= pos.x + range && playerPos.x >= pos.x - range && playerPos.y == pos.y)
-			|| (playerPos.y <= pos.y + range && playerPos.y >= pos.y - range && playerPos.x == pos.x)
-			|| (abs(playerPos.x - pos.x) <= 2 * mapMan.tilesetSize
-				&& abs(playerPos.y - pos.y) <= 2 * mapMan.tilesetSize);
+		int ts = mapMan.tilesetSize;
+		int range = 7 * ts;
+
+		for (int j = 0; j < bossSize; j++) {
+			int rowY = pos.y + j * ts;
+			if (playerPos.y == rowY) {
+				if (playerPos.x < pos.x && pos.x - playerPos.x <= range)                          return true;
+				if (playerPos.x >= pos.x + bossSize * ts && playerPos.x - pos.x <= range + bossSize * ts) return true;
+			}
+		}
+
+		for (int i = 0; i < bossSize; i++) {
+			int colX = pos.x + i * ts;
+			if (playerPos.x == colX) {
+				if (playerPos.y < pos.y && pos.y - playerPos.y <= range)                          return true;
+				if (playerPos.y >= pos.y + bossSize * ts && playerPos.y - pos.y <= range + bossSize * ts) return true;
+			}
+		}
+
+		// Proximité immédiate (joueur dans ou très proche du boss)
+		V2 center = V2(pos.x + (bossSize / 2) * ts, pos.y + (bossSize / 2) * ts);
+		return abs(playerPos.x - center.x) <= bossSize * ts
+			&& abs(playerPos.y - center.y) <= bossSize * ts;
 	}
 
 	bool rangeOfAttack(V2 playerPos) override {
@@ -335,34 +353,75 @@ struct Boss : public Enemy {
 	}
 
 	void registerMove(V2& playerFuturePos) override {
-		V2 toPlayer = playerFuturePos - pos;
+		int ts = mapMan.tilesetSize;
+		int jumpDist = rand() % 3 + 1; // 1, 2 ou 3 cases
 
-		if (toPlayer.x != 0) {
-			lastMove = toPlayer.x > 0 ? Movement::Right : Movement::Left;
-			lastDir = toPlayer.x > 0 ? Direction::Right : Direction::Left;
+		// Toutes les cases de la zone 3x3 (8 directions, diagonales incluses)
+		vector<V2> candidates;
+		for (int dx = -1; dx <= 1; dx++)
+			for (int dy = -1; dy <= 1; dy++) {
+				if (dx == 0 && dy == 0) continue;
+				V2 dest = V2(pos.x + dx * jumpDist * ts, pos.y + dy * jumpDist * ts);
+				if (canLand(dest, playerFuturePos))
+					candidates.push_back(dest);
+			}
+
+		if (candidates.empty()) { turnDone = true; return; }
+
+		V2 toPlayer = playerFuturePos - pos;
+		V2 chosen;
+
+		if (rand() % 100 < 70) {
+			// 70% : choisir la case la plus proche du joueur
+			float bestDot = -999999;
+			for (V2& c : candidates) {
+				float dot = (c.x - pos.x) * toPlayer.x + (c.y - pos.y) * toPlayer.y;
+				if (dot > bestDot) { bestDot = dot; chosen = c; }
+			}
 		}
 		else {
-			lastMove = toPlayer.y > 0 ? Movement::Up : Movement::Down;
-			lastDir = toPlayer.y > 0 ? Direction::Up : Direction::Down;
+			// 30% : choisir une case aléatoire
+			chosen = candidates[rand() % candidates.size()];
 		}
 
-		V2 dir = dirVectors[lastMove];
-		V2 landing = pos;
-		int jumpDist = rand() % 3 + 1;
+		futurePos = chosen;
 
-		for (int i = 1; i <= jumpDist; i++) {
-			V2 candidate = V2(pos.x + dir.x * i, pos.y + dir.y * i);
-			if (canLand(candidate, playerFuturePos))  //vérifie les 4 cases
-				landing = candidate;
-			else
-				break;
-		}
+		// Direction visuelle (axe dominant)
+		V2 dir = V2(futurePos.x - pos.x, futurePos.y - pos.y);
+		if (abs(dir.x) >= abs(dir.y))
+			lastDir = dir.x > 0 ? Direction::Right : Direction::Left;
+		else
+			lastDir = dir.y > 0 ? Direction::Up : Direction::Down;
 
-		futurePos = landing;
-		isMoving = !(futurePos == pos);
-		isJumping = isMoving;
+		lastMove = Movement::None; // plus utilisé, mouvement géré dans move()
+		isMoving = true;
+		isJumping = true;
 		canMove = true;
 		speed = 4;
+	}
+
+	void move() override {
+		if (isMoving && canMove && !(futurePos == pos)) {
+			V2 toFuture = V2(futurePos.x - pos.x, futurePos.y - pos.y);
+			float distSq = toFuture.x * toFuture.x + toFuture.y * toFuture.y;
+
+			if (distSq <= speed * speed)
+				pos = futurePos;
+			else {
+				float dist = sqrt(distSq);
+				pos = V2(pos.x + (toFuture.x / dist) * speed,
+					pos.y + (toFuture.y / dist) * speed);
+			}
+		}
+
+		if (isMoving && futurePos == pos) {
+			isMoving = false;
+			turnDone = true;
+		}
+
+		anim.SetDirection(lastDir);
+		anim.isMoving = isMoving && canMove;
+		anim.Update();
 	}
 
 	void nextAction(V2& playerPos, V2& playerFuturePos) override {
@@ -536,8 +595,7 @@ struct Player
 		isMoving = lastMove != Movement::None && !(pos == futurePos);
 		canMove = !mapMan.Mur(futurePos.x / mapMan.tilesetSize, futurePos.y / mapMan.tilesetSize)
 			&& !(futurePos == enemy.futurePos && enemy.isAlive)
-			&& !(boss.isAlive && boss.HitBox(boss.pos, futurePos))
-			&& !(boss.isAlive && boss.HitBox(boss.futurePos, futurePos));
+			&& !(boss.isAlive && boss.HitBox(boss.pos, futurePos));
 		if(!canMove) futurePos = pos;
 
 		anim.SetDirection(lastDir);
