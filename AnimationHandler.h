@@ -16,6 +16,7 @@ public:
     Direction currentDir = Direction::Down;
     bool isMoving = false;
 	bool isAttacking = false;
+	bool Hit = false;
 
     int animSpeed = 8;
     int timer = 0;
@@ -54,6 +55,7 @@ public:
 
 	std::string GetCurrentTextureName() {
         if (isAttacking) return "Attack";
+		if (Hit) return "Hit";
 		return isMoving ? "Walk" : "Idle";
 	}
 
@@ -64,6 +66,7 @@ public:
     int GetCurrentTexture() {
         int texture = isMoving && !isAttacking ? textures["Walk"] : textures["Idle"];
 		texture = isAttacking ? textures["Attack"] : texture;
+		texture = Hit ? textures["Hit"] : texture;
         return texture;
     }
 
