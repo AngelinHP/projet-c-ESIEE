@@ -31,7 +31,6 @@ public:
     void LoadTexture(const std::string& name, const std::string& path, int _spriteSize, V2 _textureTotalSize, int _frameCount, bool _horizontalSpriteSheet = false) {
        int texture = G2D::ExtractTextureFromPNG(path, Transparency::None);
 	   if (texture == 0) {
-		   std::cout << "Failed to load texture: " << path << std::endl;
 		   return;
 	   }
 	   textures[name] = texture;
@@ -45,12 +44,27 @@ public:
     void Update() {
         timer++;
 
-        int currentSpeed = isMoving && !isAttacking ? animSpeed : 15;
+        int currentSpeed = (GetCurrentTextureName() == "Idle") ? animSpeed : (isMoving && !isAttacking ? animSpeed : 15);
         currentSpeed = isAttacking ? 15 : currentSpeed;
 
-        currentFrame = (timer / currentSpeed) % framecounts[GetCurrentTextureName()];
+        //Protection contre la division par 0 pour la vitesse
+        if (currentSpeed <= 0) {
+            currentSpeed = 1;
+        }
 
-        if(timer >= currentSpeed * framecounts[GetCurrentTextureName()]) {
+        string texName = GetCurrentTextureName();
+        int maxFrames = framecounts[texName];
+
+        //Protection contre le modulo par 0 (texture non chargée ou 0 frames)
+        if (maxFrames <= 0) {
+            currentFrame = 0;
+            cout << "Invalid animation frame count for texture: " << texName << endl;
+            return; // On annule la mise à jour si l'animation est invalide
+        }
+
+        currentFrame = (timer / currentSpeed) % maxFrames;
+
+        if (timer >= currentSpeed * maxFrames) {
             timer = 0;
         }
     }
@@ -66,9 +80,17 @@ public:
     }
 
     int GetCurrentTexture() {
+        string texName = GetCurrentTextureName();
+
+        // Si la texture demandée existe dans la map, on la renvoie
+        if (textures.find(texName) != textures.end()) {
+            return textures[texName];
+        }
+
+        // Sécurité/Fallback au cas où (pour le joueur et les ennemis)
         int texture = isMoving && !isAttacking ? textures["Walk"] : textures["Idle"];
-		texture = isAttacking ? textures["Attack"] : texture;
-		texture = Hit ? textures["Hit"] : texture;
+        texture = isAttacking ? textures["Attack"] : texture;
+        texture = Hit ? textures["Hit"] : texture;
         return texture;
     }
 

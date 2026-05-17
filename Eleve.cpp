@@ -108,7 +108,7 @@ struct Enemy
 			|| playerPos == pos - V2(0, mapMan.tilesetSize);
 	}
 
-	void attack() {
+	virtual void attack() {
 		// Attaque en fonction de la direction
 		if (isAttacking) {
 			anim.isAttacking = true;
@@ -253,18 +253,33 @@ struct Enemy
 
 struct Boss : public Enemy {
 
-	int maxHealth = 300;
+	int maxHealth = 120;
 	int phase = 1;
+
+	AnimationHandler chargeEffectAnim;
 
 	int bossSize = 2; // taille en cases
 
 	bool isJumping = false;
 	bool isCharging = false;
 
+	bool isAggressive = false; //le boss dort tant qu'on ne l'agresse pas
+
+	bool isChargingUp = false; // tour 1 : vent de charge
+	bool isChargeAttacking = false;
+	int  chargeAttackDamage = 60; // double des dégâts normaux
+
+	bool  isTransitioning = false;
+	float transitionProgress = 0.0f;
+	int   transitionTimer = 0;
+	const int TRANSITION_DURATION = 180;
+
+	int moveCooldown = 0; // 0 = peut bouger, 1 = attend ce tour
+
 	Boss(V2& _pos, int& tilesetSize, MapManager& _map)
 		: Enemy(_pos, tilesetSize, _map)
 	{
-		currentHealth = 300;
+		currentHealth = maxHealth;
 		attackDamage = 25;
 	}
 
@@ -275,6 +290,16 @@ struct Boss : public Enemy {
 		anim.LoadTexture("Attack", "sprites\\boss\\phase1\\Attack.png", 60, V2(240, 60), 4, true);
 		anim.LoadTexture("Charge", "sprites\\boss\\phase1\\Charge.png", 60, V2(120, 60), 2, true);
 		anim.LoadTexture("Jump", "sprites\\boss\\phase1\\Jump.png", 60, V2(300, 60), 5, true);
+		anim.LoadTexture("Idle_red", "sprites\\boss\\phase2\\Idle.png", 60, V2(360, 60), 6, true);
+		anim.LoadTexture("Walk_red", "sprites\\boss\\phase2\\Walk.png", 60, V2(360, 60), 6, true);
+		anim.LoadTexture("Attack_red", "sprites\\boss\\phase2\\Attack.png", 60, V2(240, 60), 4, true);
+		anim.LoadTexture("Charge_red", "sprites\\boss\\phase2\\Charge.png", 60, V2(120, 60), 2, true);
+		anim.LoadTexture("Jump_red", "sprites\\boss\\phase2\\Jump.png", 60, V2(300, 60), 5, true);
+
+		//effet de claw
+		chargeEffectAnim.LoadTexture("Idle", "sprites\\boss\\phase2\\Claw.png", 32, V2(128, 32), 4, true);
+		chargeEffectAnim.animSpeed = 10; // Vitesse rapide pour l'effet d'attaque
+		chargeEffectAnim.isMoving = false; // Force la lecture avec 'animSpeed'
 	}
 
 	// Vérifie si une position monde est occupée par le boss
@@ -297,12 +322,22 @@ struct Boss : public Enemy {
 		return true;
 	}
 
+	void takeDamage(int amount) {
+		// Appelle la fonction de base pour réduire la vie
+		Enemy::takeDamage(amount);
+
+		// Le boss se réveille dès qu'il prend des dégâts
+		if (!isAggressive) {
+			isAggressive = true;
+		}
+	}
+
 	// Choisit la bonne texture selon l'état du boss
 	string getBossTextureName() {
-		if (isJumping)   return "Jump";
-		if (isCharging)  return "Charge";
-		if (isAttacking) return "Attack";
-		return "Idle"; // déplacement et repos = Idle
+		if (isTransitioning || isChargingUp || isChargeAttacking) return "Charge"; // ← priorité absolue
+		if (isJumping)       return "Jump";
+		if (isAttacking)     return "Attack";
+		return "Idle";
 	}
 
 	bool LineOfSight(V2 playerPos) override {
@@ -425,22 +460,49 @@ struct Boss : public Enemy {
 	}
 
 	void nextAction(V2& playerPos, V2& playerFuturePos) override {
+
+		// Si le joueur n'a pas encore frappé le boss, le boss passe son tour immédiatement
+		if (!isAggressive) {
+			turnDone = true;
+			return;
+		}
+
 		if (isAttacking || isMoving || turnDone) return;
+
+
+		if (isChargingUp) {
+			isChargingUp = false;
+			isChargeAttacking = true;
+			isAttacking = true;
+			anim.timer = 0;
+			return;
+		}
 
 		playerIsInSight = LineOfSight(playerFuturePos);
 		playerIsInRange = rangeOfAttack(playerFuturePos);
 
 		if (!playerIsInRange && playerIsInSight) {
-			registerMove(playerFuturePos);          // saut vers le joueur
-		}
+			if (moveCooldown == 0) { registerMove(playerFuturePos); moveCooldown = 1; //passe son tour
+			}
+			else { moveCooldown = 0; turnDone = true; }
+		}// saut vers le joueur
 		else if (playerIsInRange) {
-			if (rand() % 100 < 30)
-				flee(playerFuturePos);              // 30% : fuite
-			else {
-				isAttacking = true;                 // 70% : attaque
-				anim.timer = 0;
+			int roll = rand() % 100;
+			if (phase == 2 && roll < 30) { //30% d'attaque chargée
+				// Tour 1 : début du chargement
+				isChargingUp = true;
+				turnDone = true;
 				ChangeToPlayerDirection(playerPos);
 			}
+			else if (roll < 30) {
+				flee(playerFuturePos); // se deplace 30% du temps en range d'attaque pour tenter de se repositionner
+			}
+			else {
+				isChargeAttacking = false;
+				isAttacking = true;
+				anim.timer = 0;
+				ChangeToPlayerDirection(playerPos);
+			} // 40% d'attaque normale
 		}
 		else
 			turnDone = true;
@@ -454,10 +516,12 @@ struct Boss : public Enemy {
 	}
 
 	void updatePhase() {
-		if (phase == 1 && currentHealth < maxHealth / 2) {
-			phase = 2;
-			attackDamage = 40;
-			cout << "[BOSS] Phase 2 !" << endl;
+		if (phase == 1 && currentHealth <= maxHealth / 2 && !isTransitioning) {
+			isTransitioning = true;
+			isCharging = true;
+			anim.timer = 0;
+			transitionTimer = 0;
+			transitionProgress = 0.0f;
 		}
 	}
 
@@ -465,16 +529,50 @@ struct Boss : public Enemy {
 	bool update(V2& playerPos, V2& playerFuturePos) {
 		updatePhase();
 
-		bool wasMoving = isMoving;
-		bool done = Enemy::update(playerPos, playerFuturePos);
+		if (isTransitioning) {
+			transitionTimer++;
+			transitionProgress = (float)transitionTimer / TRANSITION_DURATION;
 
-		// Atterrissage : le boss vient d'arriver
-		if (wasMoving && !isMoving) {
-			isJumping = false;
-			speed = 2; // reset vitesse normale
+			anim.isAttacking = false;
+			anim.isMoving = false;
+			anim.Update();
+
+			if (transitionTimer >= TRANSITION_DURATION) {
+				phase = 2;
+				attackDamage = 40;
+				isTransitioning = false;
+				isCharging = false;
+				transitionProgress = 1.0f;
+				turnDone = true;
+			}
+			return turnDone; // le boss est figé pendant la transition
 		}
 
-		return done;
+		currentTime = G2D::elapsedTimeFromStartSeconds();
+		isAlive = currentHealth > 0;
+
+		bool wasMoving = isMoving;
+
+		if (isAlive) {
+			nextAction(playerPos, playerFuturePos);
+			move();
+			if (playerFuturePos == playerPos && !isChargingUp)
+				attack();
+			else if (isChargingUp)
+				attack();
+		}
+		else {
+			die();
+		}
+
+		if (wasMoving && !isMoving) { isJumping = false; speed = 2; }
+
+		// Mise à jour de l'effet si le boss est en train de faire son attaque chargée
+		if (isChargeAttacking) {
+			chargeEffectAnim.Update();
+		}
+
+		return turnDone;
 	}
 
 	void draw(Camera2D& camera) {
@@ -486,14 +584,50 @@ struct Boss : public Enemy {
 		int srcX = anim.currentFrame * anim.spriteSize; // horizontal strip
 		int srcY = 0;
 
-		G2D::drawSpriteFrame(
-			anim.textures[texName],
-			camera.renderWcamera(pos),
-			V2(anim.spriteSize, anim.spriteSize) * camera.zoom,
-			V2(srcX, srcY),
-			V2(anim.spriteSize, anim.spriteSize),
-			anim.textureSizes[texName]
-		);
+		bool drawRed = false;
+		if (isTransitioning) {
+			int flashRate = max(1, (int)(20 * (1.0f - transitionProgress)));
+			drawRed = (transitionTimer % flashRate) < (flashRate / 2);
+		}
+		else if (phase == 2) {
+			drawRed = true; //swap vers sprites rouges ici quand disponibles
+		}
+
+		if (!drawRed) {
+			G2D::drawSpriteFrame(
+				anim.textures[texName], camera.renderWcamera(pos), V2(anim.spriteSize, anim.spriteSize) * camera.zoom,
+				V2(srcX, 0), V2(anim.spriteSize, anim.spriteSize),
+				anim.textureSizes[texName]
+			);
+		}
+		else {
+			G2D::drawSpriteFrame(
+				anim.textures[texName + "_red"], camera.renderWcamera(pos), V2(anim.spriteSize, anim.spriteSize) * camera.zoom,
+				V2(srcX, 0), V2(anim.spriteSize, anim.spriteSize),
+				anim.textureSizes[texName + "_red"]
+			);
+		}
+
+		// Dessin de l'effet tout autour si l'attaque chargée est en cours
+		if (isChargeAttacking) {
+			int ts = mapMan.tilesetSize;
+
+			// Coordonnées des 8 cases entourant le Boss
+			vector<V2> effectPositions = {
+				// Ligne du Haut
+				V2(pos.x, pos.y - ts), V2(pos.x + ts, pos.y - ts),
+				// Ligne du Bas
+				V2(pos.x, pos.y + 2 * ts), V2(pos.x + ts, pos.y + 2 * ts),
+				// Colonne de Gauche
+				V2(pos.x - ts, pos.y), V2(pos.x - ts, pos.y + ts),
+				// Colonne de Droite
+				V2(pos.x + 2 * ts, pos.y), V2(pos.x + 2 * ts, pos.y + ts)
+			};
+
+			for (V2 effectPos : effectPositions) {
+				chargeEffectAnim.Draw(camera, effectPos);
+			}
+		}
 	}
 };
 
@@ -768,6 +902,8 @@ void Logic(GameData & G) // appel� 20 fois par seconde
 
 	G.player.animation(G.enemy, G.boss);
 
+	G.boss.anim.Update();
+
 	if(G.currentTurn == GameData::TurnState::Player) {
 
 		// Gestion du faire de ramasser des objets et les mettre dans l'inventaire
@@ -795,7 +931,7 @@ void Logic(GameData & G) // appel� 20 fois par seconde
 
 			if(G.player.dealDamage && G.player.rangeOfAttack(G.enemy.pos))
 				G.enemy.takeDamage(G.player.attackDamage);
-			if (G.player.dealDamage && G.player.rangeOfAttack(G.boss.pos))
+			if (G.player.dealDamage && G.boss.rangeOfAttack(G.player.pos))
 				G.boss.takeDamage(G.player.attackDamage);
 		
 			G.player.setDealDamage(false);
@@ -840,7 +976,17 @@ void Logic(GameData & G) // appel� 20 fois par seconde
 
 	else if (G.currentTurn == GameData::TurnState::Boss) {
 		bool bossDone = G.boss.update(G.player.pos, G.player.futurePos);
-		if (G.boss.dealDamage) { G.player.takeDamage(G.boss.attackDamage); G.boss.dealDamage = false; }
+		if (G.boss.dealDamage) {
+			if (G.boss.rangeOfAttack(G.player.pos)) {
+				int dmg = G.boss.isChargeAttacking
+					? G.boss.chargeAttackDamage  // attaque chargée 
+					: G.boss.attackDamage;       // attaque normale
+				G.player.takeDamage(dmg);
+			}
+			G.boss.dealDamage = false;
+			G.boss.isChargeAttacking = false; // reset
+		}
+
 		if (bossDone) G.currentTurn = GameData::TurnState::Player;
 	}
 
