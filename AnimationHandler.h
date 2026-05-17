@@ -1,7 +1,6 @@
 #pragma once
 
 #include <map>
-#include <iostream>
 
 #include "G2D.h"
 #include "Camera2D.h"

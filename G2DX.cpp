@@ -83,7 +83,7 @@ void G2D::drawRectWithTexture(int texture, V2 pos, V2 size, float angleDeg)
 	glDisable(GL_TEXTURE_2D);
 }
 
-//c'est encore moi ( la fonction sert a zoomer sur un sprite sheet pour n'afficher qu'une partie de l'image )
+//la fonction sert a zoomer sur un sprite sheet pour n'afficher qu'une partie de l'image
 void G2D::drawSpriteFrame(int texture, V2 pos, V2 size, V2 srcPos, V2 srcSize, V2 texSize, float angleDeg)
 {
 	glLineWidth(0);

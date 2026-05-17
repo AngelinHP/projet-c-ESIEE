@@ -76,11 +76,10 @@ struct Enemy
 
 	void takeDamage(int amount) {
 		currentHealth -= amount;
-		if (currentHealth < 0) currentHealth = 0; // On empêche la vie de passer en négatif
-	}
+		if (currentHealth <= 0) currentHealth = 0;
+	} // On empêche la vie de passer en négatif
 
 	void die() {
-		// Ici on pourrait ajouter une animation de mort ou autre
 		isAlive = false;
 		turnDone = true; // Le tour du joueur est passé
 	}	
@@ -562,7 +561,7 @@ struct Boss : public Enemy {
 				attack();
 		}
 		else {
-			die();
+			Enemy::die();
 		}
 
 		if (wasMoving && !isMoving) { isJumping = false; speed = 2; }
@@ -755,6 +754,9 @@ struct Player
 	bool isAttacking = false;
 	bool dealDamage = false;
 	bool alreadyLaunchedFireball = false;
+	bool haveKatana = false;
+
+	bool isAlive = true;
 
 	double currentTime = G2D::elapsedTimeFromStartSeconds();
 	V2 futurePos;
@@ -801,6 +803,8 @@ struct Player
 				else if (G2D::isKeyPressed(Key::S)) { newDir = Direction::Down; newMove = Movement::Down; newPos = pos + dirVectors[Movement::Down]; alreadyLaunchedFireball = false;}
 				else if (G2D::isKeyPressed(Key::Q)) { newDir = Direction::Left; newMove = Movement::Left; newPos = pos + dirVectors[Movement::Left]; alreadyLaunchedFireball = false;}
 				else if (G2D::isKeyPressed(Key::D)) { newDir = Direction::Right; newMove = Movement::Right; newPos = pos + dirVectors[Movement::Right]; alreadyLaunchedFireball = false;}
+				
+				
 				else if (G2D::keyHasBeenHit(Key::F)) { isAttacking = true; anim.timer = 0; }
 				else if (G2D::keyHasBeenHit(Key::E) && !fireball.active && !alreadyLaunchedFireball) {fireball.Init(pos, lastDir, mapMan.tilesetSize, mapMan); alreadyLaunchedFireball = true;}
 
@@ -843,6 +847,7 @@ struct Player
 	void attack() {
 		// Attaque en fonction de la direction
 		if (isAttacking) {
+			attackDamage = haveKatana ? 35 : 5; // dégâts plus élevés si le joueur a le katana
 			anim.isAttacking = true;
 			// Meme logique que pour l'ennemie
 			if (anim.timer >= 59) {
@@ -852,11 +857,15 @@ struct Player
 			}
 		}
 	}
-	bool rangeOfAttack(V2& ennemyPos) {
-		return ennemyPos == pos + V2(mapMan.tilesetSize, 0) 
-			|| ennemyPos == pos - V2(mapMan.tilesetSize, 0) 
-			|| ennemyPos == pos + V2(0, mapMan.tilesetSize) 
-			|| ennemyPos == pos - V2(0, mapMan.tilesetSize);
+	
+
+	// Retourne la position exacte de la case attaquée en fonction de la direction du joueur
+	V2 getAttackPos() {
+		if (lastDir == Direction::Up)    return pos + V2(0, mapMan.tilesetSize);
+		if (lastDir == Direction::Down)  return pos + V2(0, -mapMan.tilesetSize);
+		if (lastDir == Direction::Left)  return pos + V2(-mapMan.tilesetSize, 0);
+		if (lastDir == Direction::Right) return pos + V2(mapMan.tilesetSize, 0);
+		return pos;
 	}
 
 	void die() {
@@ -869,7 +878,7 @@ struct Player
 	}
 	void takeDamage(int amount) {
 		currentHealth -= amount;
-		if (currentHealth < 0) currentHealth = 0; // On empêche la vie de passer en négatif
+		if (currentHealth <= 0) { currentHealth = 0; isAlive = false; } // On empêche la vie de passer en négatif
 	}
 
 	void heal(int amount) {
@@ -917,10 +926,14 @@ struct GameData
 	int HeighPix = 800;   // hauteur de la fen�tre d'application
 	int WidthPix = 1600;   // largeur de la fen�tre d'application
 
+	V2 centerMap = V2(WidthPix / 2, HeighPix / 2);
+
 	bool playerHasActed = false;
 
 	enum class TurnState { Player, Enemy, Boss };
+	enum class GameState { Playing, GameOver, Victory };
 	TurnState currentTurn = TurnState::Player;
+	GameState currentGameState = GameState::Playing;
 
 	MapManager& map = MapManager();
 
@@ -957,33 +970,50 @@ struct GameData
 void Render(const GameData& G)
 {
 	G2D::clearScreen(Color::Black);
+	if (G.currentGameState == GameData::GameState::GameOver) {
+		// On dessine un fond noir par dessus le jeu
+		G2D::drawRectangle(V2(0, 0), V2(G.WidthPix, G.HeighPix), Color::Black, true);
 
-	G.map.drawMap(G.camera);
-
-	G.player.draw(G.camera);
-	G.enemy.draw(G.camera);
-	G.boss.draw(G.camera);
-
-	if (G.player.isInInventory)
-		G.inventory.drawInventory(G.camera, 200, 200);
-
-	// Fond de la barre
-	G2D::drawRectangle(V2(G.HealthBarUiX, G.HealthBarUiY), V2(G.HealthbarMaxWidth, G.HealthbarHeight), Color::Red, true);
-
-	// Calcul de la largeur de la barre verte en fonction du pourcentage de vie
-	int currentBarWidth = (G.player.currentHealth * G.HealthbarMaxWidth) / G.player.maxHealth;
-
-	// Dessin de la jauge verte (seulement s'il reste de la vie)
-	if (currentBarWidth > 0) {
-		G2D::drawRectangle(V2(G.HealthBarUiX, G.HealthBarUiY), V2(currentBarWidth, G.HealthbarHeight), Color::Green, true);
+		// On écrit le texte au centre
+		G2D::drawStringFontMono(V2(G.WidthPix / 2 - 150, G.HeighPix / 2), "GAME OVER", 50.0F, 4.0F, Color::Red);
 	}
+	else if (G.currentGameState == GameData::GameState::Victory) {
+		// On dessine un fond noir par dessus le jeu
+		G2D::drawRectangle(V2(0, 0), V2(G.WidthPix, G.HeighPix), Color::Black, true);
+		// On écrit le texte au centre
+		G2D::drawStringFontMono(V2(G.WidthPix / 2 - 150, G.HeighPix / 2), "VICTORY", 50.0F, 4.0F, Color::Green);
+	}
+	else if (G.currentGameState == GameData::GameState::Playing) {
+		// Dessine la carte
 
-	// Contour blanc
-	G2D::drawLine(V2(G.HealthBarUiX, G.HealthBarUiY), V2(G.HealthBarUiX + G.HealthbarMaxWidth, G.HealthBarUiY), Color::White);
-	G2D::drawLine(V2(G.HealthBarUiX, G.HealthBarUiY), V2(G.HealthBarUiX, G.HealthBarUiY + G.HealthbarHeight), Color::White);
-	G2D::drawLine(V2(G.HealthBarUiX + G.HealthbarMaxWidth, G.HealthBarUiY), V2(G.HealthBarUiX + G.HealthbarMaxWidth, G.HealthBarUiY + G.HealthbarHeight), Color::White);
-	G2D::drawLine(V2(G.HealthBarUiX, G.HealthBarUiY + G.HealthbarHeight), V2(G.HealthBarUiX + G.HealthbarMaxWidth, G.HealthBarUiY + G.HealthbarHeight), Color::White);
 
+		G.map.drawMap(G.camera);
+
+		G.player.draw(G.camera);
+		G.enemy.draw(G.camera);
+		G.boss.draw(G.camera);
+
+		if (G.player.isInInventory)
+			G.inventory.drawInventory(G.camera, 200, 200);
+
+		// Fond de la barre
+		G2D::drawRectangle(V2(G.HealthBarUiX, G.HealthBarUiY), V2(G.HealthbarMaxWidth, G.HealthbarHeight), Color::Red, true);
+
+		// Calcul de la largeur de la barre verte en fonction du pourcentage de vie
+		int currentBarWidth = (G.player.currentHealth * G.HealthbarMaxWidth) / G.player.maxHealth;
+
+		// Dessin de la jauge verte (seulement s'il reste de la vie)
+		if (currentBarWidth > 0) {
+			G2D::drawRectangle(V2(G.HealthBarUiX, G.HealthBarUiY), V2(currentBarWidth, G.HealthbarHeight), Color::Green, true);
+		}
+
+		// Contour blanc
+		G2D::drawLine(V2(G.HealthBarUiX, G.HealthBarUiY), V2(G.HealthBarUiX + G.HealthbarMaxWidth, G.HealthBarUiY), Color::White);
+		G2D::drawLine(V2(G.HealthBarUiX, G.HealthBarUiY), V2(G.HealthBarUiX, G.HealthBarUiY + G.HealthbarHeight), Color::White);
+		G2D::drawLine(V2(G.HealthBarUiX + G.HealthbarMaxWidth, G.HealthBarUiY), V2(G.HealthBarUiX + G.HealthbarMaxWidth, G.HealthBarUiY + G.HealthbarHeight), Color::White);
+		G2D::drawLine(V2(G.HealthBarUiX, G.HealthBarUiY + G.HealthbarHeight), V2(G.HealthBarUiX + G.HealthbarMaxWidth, G.HealthBarUiY + G.HealthbarHeight), Color::White);
+
+	}
 	G2D::Show();
 }
 
@@ -1016,9 +1046,7 @@ void Logic(GameData & G) // appel� 20 fois par seconde
 		}
 	}
 
-	cout << "Boss health: " << G.boss.currentHealth << endl;
-
-	if(G.currentTurn == GameData::TurnState::Player) {
+	if(G.currentTurn == GameData::TurnState::Player && G.player.isAlive) {
 
 		// Gestion du faire de ramasser des objets et les mettre dans l'inventaire
 		if (G.player.pos == G.player.futurePos) {
@@ -1043,12 +1071,20 @@ void Logic(GameData & G) // appel� 20 fois par seconde
 
 			G.playerHasActed = G.player.handleInput(G.enemy, G.boss);
 
-			if(G.player.dealDamage && G.player.rangeOfAttack(G.enemy.pos))
-				G.enemy.takeDamage(G.player.attackDamage);
-			if (G.player.dealDamage && G.boss.rangeOfAttack(G.player.pos))
-				G.boss.takeDamage(G.player.attackDamage);
-		
-			G.player.setDealDamage(false);
+			if (G.player.dealDamage) {
+				V2 attackPos = G.player.getAttackPos(); // On récupère la case visée
+
+				// Dégâts sur l'ennemi de base
+				if (attackPos == G.enemy.pos && G.enemy.isAlive) {
+					G.enemy.takeDamage(G.player.attackDamage);
+				}
+				// Dégâts sur le Boss (HitBox permet de gérer sa taille de 2x2)
+				if (G.boss.isAlive && G.boss.HitBox(G.boss.pos, attackPos)) {
+					G.boss.takeDamage(G.player.attackDamage);
+				}
+
+				G.player.setDealDamage(false);
+			}
 		}
 		else
 		{
@@ -1059,11 +1095,11 @@ void Logic(GameData & G) // appel� 20 fois par seconde
 		// On vérifie que c'est bien à nous de jouer, qu'on ne bouge pas et qu'on n'attaque pas si c'est le cas on peut prendre une potion
 	
 			if (G2D::keyHasBeenHit(Key::A)) {
-				cout << "pressed A" << endl;
 				// On vérifie qu'on a au moins 1 potion ET qu'on n'est pas déjà full life
 				if (G.inventory.items["Potion de vie"] > 0 && G.player.currentHealth < G.player.maxHealth) {
 					G.inventory.removeItem("Potion de vie"); // On consomme l'objet
 					G.player.heal(30);                       // On rend 30 HP
+					G.playerHasActed = true;                    // On considère que le joueur a agi pour passer son tour
 				}
 			}
 		
@@ -1102,6 +1138,16 @@ void Logic(GameData & G) // appel� 20 fois par seconde
 		}
 
 		if (bossDone) G.currentTurn = GameData::TurnState::Player;
+	}
+
+	// ÉCRAN DE GAME OVER
+	if (!G.player.isAlive) {
+		G.currentGameState = GameData::GameState::GameOver;
+	}
+
+	if (!G.boss.isAlive)
+	{
+		G.currentGameState = GameData::GameState::Victory;
 	}
 
 	
