@@ -253,7 +253,7 @@ struct Enemy
 
 struct Boss : public Enemy {
 
-	int maxHealth = 120;
+	int maxHealth = 130;
 	int phase = 1;
 
 	AnimationHandler chargeEffectAnim;
@@ -408,7 +408,7 @@ struct Boss : public Enemy {
 
 		if (rand() % 100 < 70) {
 			// 70% : choisir la case la plus proche du joueur
-			float bestDot = -999999;
+			float bestDot = -999999; //valeur initiale très basse pour être sûr de la remplacer
 			for (V2& c : candidates) {
 				float dot = (c.x - pos.x) * toPlayer.x + (c.y - pos.y) * toPlayer.y;
 				if (dot > bestDot) { bestDot = dot; chosen = c; }
@@ -631,10 +631,106 @@ struct Boss : public Enemy {
 	}
 };
 
+struct Projectile {
+	V2 pos;
+	V2 dirVector;
+	bool active = false;
+	int damage = 40;
+	int speed = 4; // Vitesse de déplacement fluide entre les cases
+	int maxRange = 2; // en cases
+	V2 targetPos;
+	V2 maxPos; // position maximale atteignable selon la direction et la portée
+
+	AnimationHandler anim;
+	MapManager mapMan;
+
+	Projectile() {}
+
+	void Init(V2 startPos, Direction dir, int tilesetSize, MapManager& _map) {
+		pos = startPos;
+		targetPos = startPos;
+		maxPos = startPos;
+		mapMan = _map;
+		active = true;
+
+		// Détermine la direction du vecteur selon l'orientation du joueur
+		if (dir == Direction::Up)    dirVector = V2(0, tilesetSize);
+		else if (dir == Direction::Down)  dirVector = V2(0, -tilesetSize);
+		else if (dir == Direction::Left)  dirVector = V2(-tilesetSize, 0);
+		else if (dir == Direction::Right) dirVector = V2(tilesetSize, 0);
+
+
+		// Calcule la position maximale atteignable
+		maxPos = pos + dirVector * maxRange;
+	}
+
+	void loadTexture() {
+		anim.LoadTexture("Idle", "sprites\\player\\Fireball.png", 32, V2(128, 32), 4, true);
+		anim.animSpeed = 6;
+		anim.isMoving = false;
+	}
+
+	// Retourne true si le projectile a fini son déplacement pour ce tour
+	void update(Enemy& enemy, Boss& boss) {
+		if (!active) return;
+
+		anim.Update();
+
+		// Déplacement fluide vers la case cible
+		V2 toTarget = targetPos - pos;
+		float distSq = toTarget.x * toTarget.x + toTarget.y * toTarget.y;
+
+		if (distSq <= speed * speed) {
+			pos = targetPos; // On se cale précisément sur la case
+
+			//Collision avec l'ennemi normal
+			if (enemy.currentHealth > 0 && pos == enemy.pos) {
+				enemy.takeDamage(damage);
+				active = false;
+				return;
+			}
+
+			//Collision avec le Boss
+			if (boss.currentHealth > 0 && boss.HitBox(boss.pos, pos)) {
+				boss.takeDamage(damage);
+				active = false;
+				return;
+			}
+
+			//Collision avec un mur
+			if (mapMan.Mur(pos.x / mapMan.tilesetSize, pos.y / mapMan.tilesetSize)) {
+				active = false;
+				return;
+			}
+
+			if(pos == maxPos)
+			{
+				active = false;
+				return;
+			}
+
+			// Si aucune collision, on planifie la case suivante
+			targetPos = pos + dirVector;
+		}
+		else {
+			pos = pos + dirVector.GetNormalized() * speed;
+		}
+	}
+
+	void draw(Camera2D& camera) {
+		if (active) {
+			anim.Draw(camera, pos);
+		}
+	}
+};
+
 
 struct Player
 {
 	V2 pos;
+
+	Projectile fireball; //le joueur a un projectile
+	
 	AnimationHandler anim;
 	MapManager mapMan;
 	enum class Movement { Up, Down, Left, Right, None };
@@ -658,6 +754,7 @@ struct Player
 	bool isInInventory = false;
 	bool isAttacking = false;
 	bool dealDamage = false;
+	bool alreadyLaunchedFireball = false;
 
 	double currentTime = G2D::elapsedTimeFromStartSeconds();
 	V2 futurePos;
@@ -684,6 +781,7 @@ struct Player
 		anim.LoadTexture("Attack", "sprites\\player\\Attack.png", 32, V2(128, 128), 4);
 		anim.LoadTexture("Hit", "sprites\\player\\Hit.png", 32, V2(128, 64), 2);
 		anim.LoadTexture("Dead", "sprites\\player\\Dead.png", 32, V2(128, 64), 2);
+		fireball.loadTexture();
 	}
 
 	bool hasActed() {
@@ -699,11 +797,12 @@ struct Player
 				Movement  newMove = Movement::None;
 				Direction newDir = lastDir;
 
-				if (G2D::isKeyPressed(Key::Z)) { newDir = Direction::Up; newMove = Movement::Up; newPos = pos + dirVectors[Movement::Up];}
-				else if (G2D::isKeyPressed(Key::S)) { newDir = Direction::Down; newMove = Movement::Down; newPos = pos + dirVectors[Movement::Down];}
-				else if (G2D::isKeyPressed(Key::Q)) { newDir = Direction::Left; newMove = Movement::Left; newPos = pos + dirVectors[Movement::Left];}
-				else if (G2D::isKeyPressed(Key::D)) { newDir = Direction::Right; newMove = Movement::Right; newPos = pos + dirVectors[Movement::Right];}
+				if (G2D::isKeyPressed(Key::Z)) { newDir = Direction::Up; newMove = Movement::Up; newPos = pos + dirVectors[Movement::Up]; alreadyLaunchedFireball = false;}
+				else if (G2D::isKeyPressed(Key::S)) { newDir = Direction::Down; newMove = Movement::Down; newPos = pos + dirVectors[Movement::Down]; alreadyLaunchedFireball = false;}
+				else if (G2D::isKeyPressed(Key::Q)) { newDir = Direction::Left; newMove = Movement::Left; newPos = pos + dirVectors[Movement::Left]; alreadyLaunchedFireball = false;}
+				else if (G2D::isKeyPressed(Key::D)) { newDir = Direction::Right; newMove = Movement::Right; newPos = pos + dirVectors[Movement::Right]; alreadyLaunchedFireball = false;}
 				else if (G2D::keyHasBeenHit(Key::F)) { isAttacking = true; anim.timer = 0; }
+				else if (G2D::keyHasBeenHit(Key::E) && !fireball.active && !alreadyLaunchedFireball) {fireball.Init(pos, lastDir, mapMan.tilesetSize, mapMan); alreadyLaunchedFireball = true;}
 
 
 				if (newMove != Movement::None) {
@@ -792,12 +891,14 @@ struct Player
 
 	bool handleInput(Enemy& enemy, Boss& boss) {
 		registerMovement(enemy, boss);
-		return hasActed();
+		return hasActed() || fireball.active;
 	}
 
 	void draw(Camera2D& camera)
 	{
 		anim.Draw(camera, pos);
+		if (fireball.active)
+			fireball.draw(camera);
 	}
 
 	void setDealDamage(bool _dealDamage) {
@@ -827,9 +928,10 @@ struct GameData
 	V2 eSpawn = map.recupESpawn();
 	V2 bossSpawn = map.recupBossSpawn();
 	
-	Boss& boss = Boss(bossSpawn, map.tilesetSize, map);
+	
 	Player& player = Player(spawn, map.tilesetSize, map);
 	Enemy& enemy = Enemy(eSpawn, map.tilesetSize, map);
+	Boss& boss = Boss(bossSpawn, map.tilesetSize, map);
 
 	Inventory& inventory = Inventory();
 
@@ -904,6 +1006,18 @@ void Logic(GameData & G) // appel� 20 fois par seconde
 
 	G.boss.anim.Update();
 
+	//Gestion de la boule de feu
+	bool fireballFinished = false;
+	if (G.player.fireball.active) {
+		G.player.fireball.update(G.enemy, G.boss);
+		// Si elle était active mais vient de s'éteindre après l'update
+		if (!G.player.fireball.active) {
+			fireballFinished = true;
+		}
+	}
+
+	cout << "Boss health: " << G.boss.currentHealth << endl;
+
 	if(G.currentTurn == GameData::TurnState::Player) {
 
 		// Gestion du faire de ramasser des objets et les mettre dans l'inventaire
@@ -953,7 +1067,7 @@ void Logic(GameData & G) // appel� 20 fois par seconde
 				}
 			}
 		
-			if (G.playerHasActed) {
+			if ((G.playerHasActed && !G.player.fireball.active) || fireballFinished) {
 				G.enemy.turnDone = false; // On reset le tour de l'ennemi pour qu'il puisse agir à son tour
 				G.boss.turnDone = false;
 				G.currentTurn = GameData::TurnState::Enemy;

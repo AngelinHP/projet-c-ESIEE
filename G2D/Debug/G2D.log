@@ -192,47 +192,55 @@ C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(605,72): warnin
 C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(606,8): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
 C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(606,42): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
 C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(606,25): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(670,24): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(671,26): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(672,23): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(673,24): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(711,76): warning C4244: 'argument' : conversion de 'float' en 'int', perte possible de données
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(711,45): warning C4244: 'argument' : conversion de 'float' en 'int', perte possible de données
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(730,71): warning C4244: 'argument' : conversion de 'float' en 'int', perte possible de données
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(730,37): warning C4244: 'argument' : conversion de 'float' en 'int', perte possible de données
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(738,55): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(757,38): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(758,35): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(759,38): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(760,38): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(869,41): warning C4244: 'argument' : conversion de 'const int' en 'float', perte possible de données
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(869,25): warning C4244: 'argument' : conversion de 'const int' en 'float', perte possible de données
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(869,82): warning C4244: 'argument' : conversion de 'const int' en 'float', perte possible de données
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(869,61): warning C4244: 'argument' : conversion de 'const int' en 'float', perte possible de données
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(876,42): warning C4244: 'argument' : conversion de 'const int' en 'float', perte possible de données
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(876,26): warning C4244: 'argument' : conversion de 'const int' en 'float', perte possible de données
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(876,79): warning C4244: 'argument' : conversion de 'const int' en 'float', perte possible de données
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(876,61): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(880,36): warning C4244: 'argument' : conversion de 'const int' en 'float', perte possible de données
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(880,20): warning C4244: 'argument' : conversion de 'const int' en 'float', perte possible de données
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(880,94): warning C4244: 'argument' : conversion de 'const int' en 'float', perte possible de données
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(880,70): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(881,36): warning C4244: 'argument' : conversion de 'const int' en 'float', perte possible de données
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(881,20): warning C4244: 'argument' : conversion de 'const int' en 'float', perte possible de données
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(881,86): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(881,56): warning C4244: 'argument' : conversion de 'const int' en 'float', perte possible de données
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(882,58): warning C4244: 'argument' : conversion de 'const int' en 'float', perte possible de données
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(882,34): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(882,130): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(882,92): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(883,50): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(883,20): warning C4244: 'argument' : conversion de 'const int' en 'float', perte possible de données
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(883,128): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(883,90): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(913,14): warning C4244: 'initialisation' : conversion de 'float' en 'int', perte possible de données
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(914,14): warning C4244: 'initialisation' : conversion de 'float' en 'int', perte possible de données
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(1010,34): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(1010,22): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
-C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\MapManager.h(167,1): warning C4715: 'MapManager::recupSpawn' : les chemins de contrôle ne retournent pas tous une valeur
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(657,50): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(658,55): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(659,52): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(660,52): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(664,30): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(701,53): warning C4244: 'argument' : conversion de 'float' en 'int', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(701,25): warning C4244: 'argument' : conversion de 'float' en 'int', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(716,44): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(767,24): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(768,26): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(769,23): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(770,24): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(810,76): warning C4244: 'argument' : conversion de 'float' en 'int', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(810,45): warning C4244: 'argument' : conversion de 'float' en 'int', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(829,71): warning C4244: 'argument' : conversion de 'float' en 'int', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(829,37): warning C4244: 'argument' : conversion de 'float' en 'int', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(837,55): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(856,38): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(857,35): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(858,38): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(859,38): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(970,41): warning C4244: 'argument' : conversion de 'const int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(970,25): warning C4244: 'argument' : conversion de 'const int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(970,82): warning C4244: 'argument' : conversion de 'const int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(970,61): warning C4244: 'argument' : conversion de 'const int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(977,42): warning C4244: 'argument' : conversion de 'const int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(977,26): warning C4244: 'argument' : conversion de 'const int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(977,79): warning C4244: 'argument' : conversion de 'const int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(977,61): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(981,36): warning C4244: 'argument' : conversion de 'const int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(981,20): warning C4244: 'argument' : conversion de 'const int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(981,94): warning C4244: 'argument' : conversion de 'const int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(981,70): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(982,36): warning C4244: 'argument' : conversion de 'const int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(982,20): warning C4244: 'argument' : conversion de 'const int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(982,86): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(982,56): warning C4244: 'argument' : conversion de 'const int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(983,58): warning C4244: 'argument' : conversion de 'const int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(983,34): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(983,130): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(983,92): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(984,50): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(984,20): warning C4244: 'argument' : conversion de 'const int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(984,128): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(984,90): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(1026,14): warning C4244: 'initialisation' : conversion de 'float' en 'int', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(1027,14): warning C4244: 'initialisation' : conversion de 'float' en 'int', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(1123,34): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Eleve.cpp(1123,22): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
 C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\MapManager.h(176,1): warning C4715: 'MapManager::recupESpawn' : les chemins de contrôle ne retournent pas tous une valeur
+C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\MapManager.h(167,1): warning C4715: 'MapManager::recupSpawn' : les chemins de contrôle ne retournent pas tous une valeur
   G2D.vcxproj -> C:\Users\Angelin Perso\Documents\GitHub\projet-c-ESIEE\Debug\G2D.exe
