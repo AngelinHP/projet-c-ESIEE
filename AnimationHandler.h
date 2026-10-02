@@ -1,7 +1,6 @@
 #pragma once
 
 #include <map>
-#include <iostream>
 
 #include "G2D.h"
 #include "Camera2D.h"
@@ -16,6 +15,7 @@ public:
     Direction currentDir = Direction::Down;
     bool isMoving = false;
 	bool isAttacking = false;
+	bool Hit = false;
 
     int animSpeed = 8;
     int timer = 0;
@@ -25,11 +25,11 @@ public:
     map<string, V2> textureSizes;
     map<string, int> framecounts;
 	map<string, int> animSpeeds;
+    map<string, bool> horizontalSpriteSheets;
 
-    void LoadTexture(const std::string& name, const std::string& path, int _spriteSize, V2 _textureTotalSize, int _frameCount) {
+    void LoadTexture(const std::string& name, const std::string& path, int _spriteSize, V2 _textureTotalSize, int _frameCount, bool _horizontalSpriteSheet = false) {
        int texture = G2D::ExtractTextureFromPNG(path, Transparency::None);
 	   if (texture == 0) {
-		   std::cout << "Failed to load texture: " << path << std::endl;
 		   return;
 	   }
 	   textures[name] = texture;
@@ -37,23 +37,40 @@ public:
 
        spriteSize = _spriteSize;
 	   framecounts[name] = _frameCount;
+	   horizontalSpriteSheets[name] = _horizontalSpriteSheet;
     }
 
     void Update() {
         timer++;
 
-        int currentSpeed = isMoving && !isAttacking ? animSpeed : 15;
+        int currentSpeed = (GetCurrentTextureName() == "Idle") ? animSpeed : (isMoving && !isAttacking ? animSpeed : 15);
         currentSpeed = isAttacking ? 15 : currentSpeed;
 
-        currentFrame = (timer / currentSpeed) % framecounts[GetCurrentTextureName()];
+        //Protection contre la division par 0 pour la vitesse
+        if (currentSpeed <= 0) {
+            currentSpeed = 1;
+        }
 
-        if(timer >= currentSpeed * framecounts[GetCurrentTextureName()]) {
+        string texName = GetCurrentTextureName();
+        int maxFrames = framecounts[texName];
+
+        //Protection contre le modulo par 0 (texture non chargée ou 0 frames)
+        if (maxFrames <= 0) {
+            currentFrame = 0;
+            cout << "Invalid animation frame count for texture: " << texName << endl;
+            return; // On annule la mise à jour si l'animation est invalide
+        }
+
+        currentFrame = (timer / currentSpeed) % maxFrames;
+
+        if (timer >= currentSpeed * maxFrames) {
             timer = 0;
         }
     }
 
 	std::string GetCurrentTextureName() {
         if (isAttacking) return "Attack";
+		if (Hit) return "Hit";
 		return isMoving ? "Walk" : "Idle";
 	}
 
@@ -62,12 +79,25 @@ public:
     }
 
     int GetCurrentTexture() {
+        string texName = GetCurrentTextureName();
+
+        // Si la texture demandée existe dans la map, on la renvoie
+        if (textures.find(texName) != textures.end()) {
+            return textures[texName];
+        }
+
+        // Sécurité/Fallback au cas où (pour le joueur et les ennemis)
         int texture = isMoving && !isAttacking ? textures["Walk"] : textures["Idle"];
-		texture = isAttacking ? textures["Attack"] : texture;
+        texture = isAttacking ? textures["Attack"] : texture;
+        texture = Hit ? textures["Hit"] : texture;
         return texture;
     }
 
-    int GetSrcX() {
+    int GetSrcX(const string& texName) {
+
+        if (horizontalSpriteSheets[texName])
+            return currentFrame * spriteSize;
+
         switch (currentDir) {
         case Direction::Down:  return 0;
         case Direction::Up:    return 32;
@@ -77,13 +107,17 @@ public:
         }
     }
 
-    int GetSrcY() {
+    int GetSrcY(const string& texName) {
+
+        if (horizontalSpriteSheets[texName])
+            return 0;
         return currentFrame * spriteSize;
     }
 
     void Draw(Camera2D& camera, V2 drawPos) {
-        int srcX = GetSrcX();
-        int srcY = GetSrcY();
+		string texName = GetCurrentTextureName();
+        int srcX = GetSrcX(texName);
+        int srcY = GetSrcY(texName);
         int currentTex = GetCurrentTexture();
 
 		//cout << "srcY: " << srcY << endl;
