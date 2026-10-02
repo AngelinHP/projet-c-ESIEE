@@ -1,38 +1,30 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\Admin\\Documents\\GitHub\\projet-c-ESIEE\\",
+  "WorkspaceRootPath": "C:\\Users\\Angelin Perso\\Documents\\GitHub\\projet-c-ESIEE\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{D1575F21-1EA8-482D-86E0-3E8D18E549B2}|G2D.vcxproj|C:\\Users\\Admin\\Documents\\GitHub\\projet-c-ESIEE\\Eleve.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{D1575F21-1EA8-482D-86E0-3E8D18E549B2}|G2D.vcxproj|C:\\Users\\Angelin Perso\\Documents\\GitHub\\projet-c-ESIEE\\Eleve.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{D1575F21-1EA8-482D-86E0-3E8D18E549B2}|G2D.vcxproj|solutionrelative:Eleve.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D1575F21-1EA8-482D-86E0-3E8D18E549B2}|G2D.vcxproj|C:\\Users\\Admin\\Documents\\GitHub\\projet-c-ESIEE\\AnimationHandler.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{D1575F21-1EA8-482D-86E0-3E8D18E549B2}|G2D.vcxproj|solutionrelative:AnimationHandler.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{D1575F21-1EA8-482D-86E0-3E8D18E549B2}|G2D.vcxproj|C:\\Users\\Admin\\Documents\\GitHub\\projet-c-ESIEE\\G2D.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{D1575F21-1EA8-482D-86E0-3E8D18E549B2}|G2D.vcxproj|solutionrelative:G2D.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{D1575F21-1EA8-482D-86E0-3E8D18E549B2}|G2D.vcxproj|C:\\Users\\Admin\\Documents\\GitHub\\projet-c-ESIEE\\G2DPNGreader.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{D1575F21-1EA8-482D-86E0-3E8D18E549B2}|G2D.vcxproj|solutionrelative:G2DPNGreader.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{D1575F21-1EA8-482D-86E0-3E8D18E549B2}|G2D.vcxproj|C:\\Users\\Admin\\Documents\\GitHub\\projet-c-ESIEE\\G2DX.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{D1575F21-1EA8-482D-86E0-3E8D18E549B2}|G2D.vcxproj|solutionrelative:G2DX.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{D1575F21-1EA8-482D-86E0-3E8D18E549B2}|G2D.vcxproj|C:\\Users\\Admin\\Documents\\GitHub\\projet-c-ESIEE\\V2.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{D1575F21-1EA8-482D-86E0-3E8D18E549B2}|G2D.vcxproj|solutionrelative:V2.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{D1575F21-1EA8-482D-86E0-3E8D18E549B2}|G2D.vcxproj|C:\\Users\\Admin\\Documents\\GitHub\\projet-c-ESIEE\\MapManager.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{D1575F21-1EA8-482D-86E0-3E8D18E549B2}|G2D.vcxproj|C:\\Users\\Angelin Perso\\Documents\\GitHub\\projet-c-ESIEE\\MapManager.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{D1575F21-1EA8-482D-86E0-3E8D18E549B2}|G2D.vcxproj|solutionrelative:MapManager.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D1575F21-1EA8-482D-86E0-3E8D18E549B2}|G2D.vcxproj|C:\\Users\\Admin\\Documents\\GitHub\\projet-c-ESIEE\\G2DKey.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{D1575F21-1EA8-482D-86E0-3E8D18E549B2}|G2D.vcxproj|solutionrelative:G2DKey.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{D1575F21-1EA8-482D-86E0-3E8D18E549B2}|G2D.vcxproj|C:\\Users\\Angelin Perso\\Documents\\GitHub\\projet-c-ESIEE\\AnimationHandler.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{D1575F21-1EA8-482D-86E0-3E8D18E549B2}|G2D.vcxproj|solutionrelative:AnimationHandler.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D1575F21-1EA8-482D-86E0-3E8D18E549B2}|G2D.vcxproj|C:\\Users\\Angelin Perso\\Documents\\GitHub\\projet-c-ESIEE\\G2D.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{D1575F21-1EA8-482D-86E0-3E8D18E549B2}|G2D.vcxproj|solutionrelative:G2D.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D1575F21-1EA8-482D-86E0-3E8D18E549B2}|G2D.vcxproj|C:\\Users\\Angelin Perso\\Documents\\GitHub\\projet-c-ESIEE\\Camera2D.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{D1575F21-1EA8-482D-86E0-3E8D18E549B2}|G2D.vcxproj|solutionrelative:Camera2D.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D1575F21-1EA8-482D-86E0-3E8D18E549B2}|G2D.vcxproj|C:\\Users\\Angelin Perso\\Documents\\GitHub\\projet-c-ESIEE\\G2DPNGreader.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{D1575F21-1EA8-482D-86E0-3E8D18E549B2}|G2D.vcxproj|solutionrelative:G2DPNGreader.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -42,7 +34,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
@@ -50,98 +42,74 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "AnimationHandler.h",
-              "DocumentMoniker": "C:\\Users\\Admin\\Documents\\GitHub\\projet-c-ESIEE\\AnimationHandler.h",
-              "RelativeDocumentMoniker": "AnimationHandler.h",
-              "ToolTip": "C:\\Users\\Admin\\Documents\\GitHub\\projet-c-ESIEE\\AnimationHandler.h",
-              "RelativeToolTip": "AnimationHandler.h",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAEsAAAACAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2026-04-11T15:55:00.45Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "G2DX.cpp",
-              "DocumentMoniker": "C:\\Users\\Admin\\Documents\\GitHub\\projet-c-ESIEE\\G2DX.cpp",
-              "RelativeDocumentMoniker": "G2DX.cpp",
-              "ToolTip": "C:\\Users\\Admin\\Documents\\GitHub\\projet-c-ESIEE\\G2DX.cpp",
-              "RelativeToolTip": "G2DX.cpp",
-              "ViewState": "AgIAACcAAAAAAAAAAAAAAFYAAAAZAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2026-04-09T13:48:09.64Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "V2.h",
-              "DocumentMoniker": "C:\\Users\\Admin\\Documents\\GitHub\\projet-c-ESIEE\\V2.h",
-              "RelativeDocumentMoniker": "V2.h",
-              "ToolTip": "C:\\Users\\Admin\\Documents\\GitHub\\projet-c-ESIEE\\V2.h",
-              "RelativeToolTip": "V2.h",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2026-04-09T13:44:26.895Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "G2D.h",
-              "DocumentMoniker": "C:\\Users\\Admin\\Documents\\GitHub\\projet-c-ESIEE\\G2D.h",
-              "RelativeDocumentMoniker": "G2D.h",
-              "ToolTip": "C:\\Users\\Admin\\Documents\\GitHub\\projet-c-ESIEE\\G2D.h",
-              "RelativeToolTip": "G2D.h",
-              "ViewState": "AgIAAD4AAAAAAAAAAAAAwFAAAAAjAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2026-04-09T13:44:27.025Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "G2DKey.cpp",
-              "DocumentMoniker": "C:\\Users\\Admin\\Documents\\GitHub\\projet-c-ESIEE\\G2DKey.cpp",
-              "RelativeDocumentMoniker": "G2DKey.cpp",
-              "ToolTip": "C:\\Users\\Admin\\Documents\\GitHub\\projet-c-ESIEE\\G2DKey.cpp",
-              "RelativeToolTip": "G2DKey.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2026-04-09T13:44:27.025Z"
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 0,
               "Title": "Eleve.cpp",
-              "DocumentMoniker": "C:\\Users\\Admin\\Documents\\GitHub\\projet-c-ESIEE\\Eleve.cpp",
+              "DocumentMoniker": "C:\\Users\\Angelin Perso\\Documents\\GitHub\\projet-c-ESIEE\\Eleve.cpp",
               "RelativeDocumentMoniker": "Eleve.cpp",
-              "ToolTip": "C:\\Users\\Admin\\Documents\\GitHub\\projet-c-ESIEE\\Eleve.cpp*",
-              "RelativeToolTip": "Eleve.cpp*",
-              "ViewState": "AgIAAFUAAAAAAAAAAAAQwG0AAAACAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\Angelin Perso\\Documents\\GitHub\\projet-c-ESIEE\\Eleve.cpp",
+              "RelativeToolTip": "Eleve.cpp",
+              "ViewState": "AgIAAEEEAAAAAAAAAAAAAC0EAABpAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2026-04-09T13:44:27.028Z",
+              "IsPinned": true,
               "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "MapManager.h",
-              "DocumentMoniker": "C:\\Users\\Admin\\Documents\\GitHub\\projet-c-ESIEE\\MapManager.h",
-              "RelativeDocumentMoniker": "MapManager.h",
-              "ToolTip": "C:\\Users\\Admin\\Documents\\GitHub\\projet-c-ESIEE\\MapManager.h",
-              "RelativeToolTip": "MapManager.h",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACwAAABFAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2026-04-09T13:44:26.961Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
+              "Title": "G2D.h",
+              "DocumentMoniker": "C:\\Users\\Angelin Perso\\Documents\\GitHub\\projet-c-ESIEE\\G2D.h",
+              "RelativeDocumentMoniker": "G2D.h",
+              "ToolTip": "C:\\Users\\Angelin Perso\\Documents\\GitHub\\projet-c-ESIEE\\G2D.h",
+              "RelativeToolTip": "G2D.h",
+              "ViewState": "AgIAABQAAAAAAAAAAAAAACMAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-05-17T16:44:06.524Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Camera2D.h",
+              "DocumentMoniker": "C:\\Users\\Angelin Perso\\Documents\\GitHub\\projet-c-ESIEE\\Camera2D.h",
+              "RelativeDocumentMoniker": "Camera2D.h",
+              "ToolTip": "C:\\Users\\Angelin Perso\\Documents\\GitHub\\projet-c-ESIEE\\Camera2D.h",
+              "RelativeToolTip": "Camera2D.h",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAAAYAAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-05-17T13:16:10.128Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "AnimationHandler.h",
+              "DocumentMoniker": "C:\\Users\\Angelin Perso\\Documents\\GitHub\\projet-c-ESIEE\\AnimationHandler.h",
+              "RelativeDocumentMoniker": "AnimationHandler.h",
+              "ToolTip": "C:\\Users\\Angelin Perso\\Documents\\GitHub\\projet-c-ESIEE\\AnimationHandler.h",
+              "RelativeToolTip": "AnimationHandler.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAH0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-04-11T15:55:00.45Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "MapManager.h",
+              "DocumentMoniker": "C:\\Users\\Angelin Perso\\Documents\\GitHub\\projet-c-ESIEE\\MapManager.h",
+              "RelativeDocumentMoniker": "MapManager.h",
+              "ToolTip": "C:\\Users\\Angelin Perso\\Documents\\GitHub\\projet-c-ESIEE\\MapManager.h",
+              "RelativeToolTip": "MapManager.h",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAABsAAAALAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-04-09T13:44:26.961Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
               "Title": "G2DPNGreader.cpp",
-              "DocumentMoniker": "C:\\Users\\Admin\\Documents\\GitHub\\projet-c-ESIEE\\G2DPNGreader.cpp",
+              "DocumentMoniker": "C:\\Users\\Angelin Perso\\Documents\\GitHub\\projet-c-ESIEE\\G2DPNGreader.cpp",
               "RelativeDocumentMoniker": "G2DPNGreader.cpp",
-              "ToolTip": "C:\\Users\\Admin\\Documents\\GitHub\\projet-c-ESIEE\\G2DPNGreader.cpp",
+              "ToolTip": "C:\\Users\\Angelin Perso\\Documents\\GitHub\\projet-c-ESIEE\\G2DPNGreader.cpp",
               "RelativeToolTip": "G2DPNGreader.cpp",
               "ViewState": "AgIAAF8AAAAAAAAAAAAAwG0AAABOAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",

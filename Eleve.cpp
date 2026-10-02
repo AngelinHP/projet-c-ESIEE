@@ -414,8 +414,60 @@ void Logic(GameData & G) // appel� 20 fois par seconde
 				G.inventory.removeItem("Potion de vie"); // On consomme l'objet
 				G.player.heal(30);                       // On rend 30 HP
 
+<<<<<<< Updated upstream
 				// On passe le tour a l'ennemi
 				G.player.setPlayerTurn(false);
+=======
+	//Gestion de la boule de feu
+	bool fireballFinished = false;
+	if (G.player.fireball.active) {
+		G.player.fireball.update(G.enemy, G.boss);
+		// Si elle était active mais vient de s'éteindre après l'update
+		if (!G.player.fireball.active) {
+			fireballFinished = true;
+		}
+	}
+
+	if(G.currentTurn == GameData::TurnState::Player && G.player.isAlive) {
+
+		// Gestion du faire de ramasser des objets et les mettre dans l'inventaire
+		if (G.player.pos == G.player.futurePos) {
+
+			// On convertit la position du joueur en pixels vers une position sur la grille (x, y)
+			int tileX = G.player.pos.x / G.map.tilesetSize;
+			int tileY = G.player.pos.y / G.map.tilesetSize;
+
+			// Calcul pour trouver l'index dans le string
+			int charIndex = (G.map.mapHeight - tileY - 1) * G.map.mapWidth + tileX;
+			char currentChar = G.map.map1[charIndex];
+
+			// On regarde s'il y a un objet sous ses pieds
+			if (currentChar == 'V') {
+				G.inventory.addItem("Potion de vie"); // Ajoute à l'inventaire
+				G.map.map1[charIndex] = ' '; // Efface l'objet de la carte
+			}
+			else if (currentChar == 'K') {
+				G.inventory.addItem("Katana");
+				G.map.map1[charIndex] = ' ';
+				G.player.haveKatana = true; // Le joueur a maintenant le katana, ce qui augmente ses dégâts d'attaque
+			}
+
+			G.playerHasActed = G.player.handleInput(G.enemy, G.boss);
+
+			if (G.player.dealDamage) {
+				V2 attackPos = G.player.getAttackPos(); // On récupère la case visée
+
+				// Dégâts sur l'ennemi de base
+				if (attackPos == G.enemy.pos && G.enemy.isAlive) {
+					G.enemy.takeDamage(G.player.attackDamage);
+				}
+				// Dégâts sur le Boss (HitBox permet de gérer sa taille de 2x2)
+				if (G.boss.isAlive && G.boss.HitBox(G.boss.pos, attackPos)) {
+					G.boss.takeDamage(G.player.attackDamage);
+				}
+
+				G.player.setDealDamage(false);
+>>>>>>> Stashed changes
 			}
 		}
 	}
