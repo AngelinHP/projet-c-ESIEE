@@ -1036,8 +1036,6 @@ void Logic(GameData & G) // appel� 20 fois par seconde
 
 	G.boss.anim.Update();
 
-				// On passe le tour a l'ennemi
-				G.player.setPlayerTurn(false);
 	//Gestion de la boule de feu
 	bool fireballFinished = false;
 	if (G.player.fireball.active) {
@@ -1069,7 +1067,6 @@ void Logic(GameData & G) // appel� 20 fois par seconde
 			else if (currentChar == 'K') {
 				G.inventory.addItem("Katana");
 				G.map.map1[charIndex] = ' ';
-				G.player.haveKatana = true; // Le joueur a maintenant le katana, ce qui augmente ses dégâts d'attaque
 			}
 
 			G.playerHasActed = G.player.handleInput(G.enemy, G.boss);
@@ -1087,10 +1084,6 @@ void Logic(GameData & G) // appel� 20 fois par seconde
 				}
 
 				G.player.setDealDamage(false);
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
->>>>>>> réforme-du-tour-par-tour
 			}
 		}
 		else
